@@ -1,0 +1,3043 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Building 14 - Palm Al-Zahraa | Maintenance 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1a3a5c;
+    --primary-light: #2563a8;
+    --accent: #c9a227;
+    --accent-light: #f0c842;
+    --success: #16a34a;
+    --success-light: #dcfce7;
+    --danger: #dc2626;
+    --danger-light: #fee2e2;
+    --warning: #d97706;
+    --warning-light: #fef3c7;
+    --neutral: #f8f9fa;
+    --surface: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --text-muted: #64748b;
+    --shadow: 0 4px 24px rgba(26,58,92,0.10);
+    --shadow-lg: 0 8px 40px rgba(26,58,92,0.15);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e8eef6 100%);
+    min-height: 100vh;
+    color: var(--text);
+    direction: rtl;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0f2744 100%);
+    color: white;
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .header-logo {
+    width: 52px; height: 52px;
+    background: var(--accent);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--primary);
+    box-shadow: 0 4px 12px rgba(201,162,39,0.4);
+    flex-shrink: 0;
+  }
+  .header-text h1 { font-size: 1.3rem; font-weight: 700; line-height: 1.2; }
+  .header-text p { font-size: 0.82rem; opacity: 0.75; margin-top: 2px; }
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+  .btn-admin {
+    background: var(--accent);
+    color: var(--primary);
+    border: none;
+    padding: 9px 18px;
+    border-radius: 10px;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    transition: all 0.2s;
+    box-shadow: 0 2px 10px rgba(201,162,39,0.3);
+  }
+  .btn-admin:hover { background: var(--accent-light); transform: translateY(-1px); }
+  .admin-badge {
+    background: rgba(201,162,39,0.2);
+    border: 1px solid rgba(201,162,39,0.4);
+    color: var(--accent-light);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: none;
+    align-items: center;
+    gap: 5px;
+  }
+  .admin-badge.active { display: flex; }
+
+  /* MONTH TABS */
+  .month-nav {
+    background: var(--primary);
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .month-nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .month-nav-inner::-webkit-scrollbar { display: none; }
+  .month-tab {
+    padding: 12px 16px;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .month-tab:hover { color: rgba(255,255,255,0.9); }
+  .month-tab.active {
+    color: var(--accent-light);
+    border-bottom-color: var(--accent);
+  }
+  .month-tab .paid-dot {
+    width: 6px; height: 6px;
+    background: var(--success);
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  /* MAIN */
+  .main { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+  /* SUMMARY CARDS */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .summary-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 4px; height: 100%;
+  }
+  .summary-card.blue::before { background: var(--primary-light); }
+  .summary-card.green::before { background: var(--success); }
+  .summary-card.red::before { background: var(--danger); }
+  .summary-card.gold::before { background: var(--accent); }
+  .summary-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; margin-bottom: 6px; }
+  .summary-value { font-size: 1.6rem; font-weight: 800; line-height: 1; }
+  .summary-value.blue { color: var(--primary-light); }
+  .summary-value.green { color: var(--success); }
+  .summary-value.red { color: var(--danger); }
+  .summary-value.gold { color: var(--accent); }
+  .summary-sub { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+
+  /* CONTENT AREA */
+  .content-area { display: grid; grid-template-columns: 1fr; gap: 20px; }
+
+  /* TENANT TABLE */
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  }
+  .card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .icon { font-size: 1.2rem; }
+
+  /* TENANT ROWS */
+  .tenant-table { width: 100%; border-collapse: collapse; }
+  .tenant-table thead tr {
+    background: linear-gradient(135deg, var(--primary), #1e4a7a);
+    color: white;
+  }
+  .tenant-table thead th {
+    padding: 12px 16px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .tenant-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .tenant-table tbody tr:hover { background: #f8fafc; }
+  .tenant-table tbody tr.paid-row { background: linear-gradient(135deg, #f0fdf4, #dcfce7); }
+  .tenant-table tbody tr.paid-row:hover { background: linear-gradient(135deg, #dcfce7, #bbf7d0); }
+  .tenant-table tbody tr.overdue-row { background: linear-gradient(135deg, #fff5f5, #fee2e2); }
+  .tenant-table td {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .tenant-name { font-weight: 700; font-size: 0.95rem; text-align: right !important; }
+  .apt-badge {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .amount-due {
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .amount-due.zero { color: var(--success); }
+  .amount-due.negative { color: var(--danger); }
+  .amount-due.positive { color: var(--primary-light); }
+
+  /* CHECKBOX / PAYMENT TOGGLE */
+  .pay-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .pay-checkbox {
+    width: 22px; height: 22px;
+    cursor: pointer;
+    accent-color: var(--success);
+  }
+  .pay-checkbox:disabled { cursor: not-allowed; opacity: 0.5; }
+
+  /* STATUS BADGE */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+  .status-paid { background: var(--success-light); color: var(--success); }
+  .status-due { background: var(--warning-light); color: var(--warning); }
+  .status-overdue { background: var(--danger-light); color: var(--danger); }
+  .status-empty { background: #f1f5f9; color: var(--text-muted); }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 20px;
+    padding: 36px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: var(--shadow-lg);
+    animation: slideIn 0.3s ease;
+  }
+  @keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .modal h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .modal p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px; }
+  .modal-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.2s;
+    text-align: center;
+    letter-spacing: 4px;
+    direction: ltr;
+    margin-bottom: 16px;
+  }
+  .modal-input:focus { border-color: var(--primary-light); }
+  .modal-input.error { border-color: var(--danger); background: var(--danger-light); }
+  .modal-error { color: var(--danger); font-size: 0.85rem; margin-bottom: 16px; display: none; }
+  .modal-error.active { display: block; }
+  .modal-actions { display: flex; gap: 10px; }
+  .btn-primary {
+    flex: 1;
+    padding: 12px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { background: var(--primary-light); }
+  .btn-secondary {
+    padding: 12px 20px;
+    background: transparent;
+    color: var(--text-muted);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--text-muted); color: var(--text); }
+
+  /* PAYMENT AMOUNT INPUT */
+  .amount-input {
+    width: 90px;
+    padding: 6px 10px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.88rem;
+    text-align: center;
+    direction: ltr;
+    outline: none;
+    transition: border 0.2s;
+  }
+  .amount-input:focus { border-color: var(--primary-light); }
+  .amount-input:disabled { background: #f1f5f9; cursor: not-allowed; }
+
+  /* CONFIRM TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--primary);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    box-shadow: var(--shadow-lg);
+    z-index: 2000;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.success { background: var(--success); }
+  .toast.error { background: var(--danger); }
+
+  /* MONTHLY MONTH HEADER */
+  .month-hero {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    border-radius: var(--radius);
+    padding: 24px 30px;
+    color: white;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .month-hero::after {
+    content: '';
+    position: absolute;
+    top: -30px; left: -30px;
+    width: 150px; height: 150px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+  }
+  .month-hero-text h2 { font-size: 1.6rem; font-weight: 800; }
+  .month-hero-text p { opacity: 0.75; font-size: 0.9rem; margin-top: 4px; }
+  .month-hero-stats { display: flex; gap: 24px; }
+  .hero-stat { text-align: center; }
+  .hero-stat-value { font-size: 1.8rem; font-weight: 900; line-height: 1; }
+  .hero-stat-label { font-size: 0.75rem; opacity: 0.75; margin-top: 3px; }
+
+  /* EXPENSES SECTION */
+  .expenses-list { padding: 4px 0; }
+  .expense-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .expense-item:last-child { border-bottom: none; }
+  .expense-item:hover { background: #f8fafc; }
+  .expense-name { font-size: 0.9rem; font-weight: 500; }
+  .expense-amount { font-weight: 700; color: var(--danger); font-size: 0.95rem; }
+  .expense-doc { font-size: 0.78rem; color: var(--text-muted); background: #f1f5f9; padding: 2px 8px; border-radius: 10px; }
+
+  /* LEDGER STATEMENT */
+  .ledger-wrap {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .ledger-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .ledger-combined {
+    border: 2px solid var(--accent);
+  }
+  .ledger-header {
+    background: linear-gradient(135deg, var(--primary), #1e4a7a);
+    color: white;
+    padding: 13px 18px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ledger-combined .ledger-header {
+    background: linear-gradient(135deg, #7c5c10, var(--accent));
+  }
+  .ledger-icon { font-size: 1.1rem; }
+  .ledger-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 11px 18px;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.15s;
+  }
+  .ledger-row:hover { background: #fafbfc; }
+  .ledger-open { background: #f8fafc; }
+  .ledger-income { background: #f0fdf4; }
+  .ledger-exp { background: #fff5f5; }
+  .ledger-close {
+    background: linear-gradient(135deg, #fffbeb, #fef9ee);
+    border-bottom: none;
+    padding: 14px 18px;
+  }
+  .ledger-label { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+  .ledger-amount { font-size: 0.95rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .ledger-amount.neutral { color: var(--primary-light); }
+  .ledger-amount.green { color: var(--success); }
+  .ledger-amount.red { color: var(--danger); }
+  .ledger-amount.gold { color: #b45309; }
+  .ledger-total-val { font-size: 1.15rem; }
+  .ledger-divider {
+    height: 2px;
+    background: repeating-linear-gradient(90deg, var(--border) 0, var(--border) 8px, transparent 8px, transparent 14px);
+    margin: 0 18px;
+  }
+  .ledger-carry {
+    padding: 7px 18px;
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    font-style: italic;
+    background: #f8fafc;
+    border-top: 1px solid #f1f5f9;
+    text-align: left;
+  }
+
+  .month-tab.annual-tab {
+    color: var(--accent-light);
+    border-right: 1px solid rgba(255,255,255,0.1);
+    margin-right: 8px;
+    padding-right: 20px;
+    font-size: 0.9rem;
+  }
+  .month-tab.annual-tab.active {
+    color: var(--accent-light);
+    border-bottom-color: var(--accent);
+    background: rgba(201,162,39,0.1);
+  }
+
+  /* ANNUAL DASHBOARD */
+  .annual-hero {
+    background: linear-gradient(135deg, #0f2744 0%, #1a3a5c 60%, #1e4a7a 100%);
+    border-radius: var(--radius);
+    padding: 30px 36px;
+    color: white;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-lg);
+  }
+  .annual-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .kpi-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    border-top: 4px solid transparent;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .kpi-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+  .kpi-blue  { border-top-color: var(--primary-light); }
+  .kpi-green { border-top-color: var(--success); }
+  .kpi-red   { border-top-color: var(--danger); }
+  .kpi-gold  { border-top-color: var(--accent); }
+  .kpi-teal  { border-top-color: #0d9488; }
+  .kpi-purple{ border-top-color: #7c3aed; }
+  .kpi-icon  { font-size: 1.8rem; flex-shrink: 0; }
+  .kpi-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
+  .kpi-value { font-size: 1.45rem; font-weight: 900; color: var(--text); line-height: 1; }
+  .kpi-sub   { font-size: 0.73rem; color: var(--text-muted); margin-top: 5px; }
+
+  .annual-charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 700px) {
+    .annual-charts-grid { grid-template-columns: 1fr; }
+  }
+
+  .annual-bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 900px) {
+    .annual-bottom-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Expense ranking bars */
+  .exp-rank-row {
+    display: grid;
+    grid-template-columns: 1fr 120px 110px;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 20px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .exp-rank-row:last-child { border-bottom: none; }
+  .exp-rank-name { font-size: 0.83rem; font-weight: 600; color: var(--text); }
+  .exp-rank-bar-wrap { height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden; }
+  .exp-rank-bar { height: 100%; background: linear-gradient(90deg, #ef4444, #dc2626); border-radius: 4px; transition: width 0.5s ease; }
+  .exp-rank-nums { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+  .exp-rank-amt { font-size: 0.82rem; font-weight: 700; color: var(--danger); }
+  .exp-rank-pct { font-size: 0.75rem; color: var(--text-muted); background: #f1f5f9; padding: 1px 6px; border-radius: 8px; }
+
+  /* Tenant performance bars */
+  .perf-row {
+    display: grid;
+    grid-template-columns: 160px 1fr 48px 80px;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f8fafc;
+  }
+  .perf-name { font-size: 0.82rem; font-weight: 700; }
+  .perf-bar-wrap { height: 10px; background: #f1f5f9; border-radius: 5px; overflow: hidden; }
+  .perf-bar { height: 100%; border-radius: 5px; transition: width 0.4s ease; }
+  .perf-pct { font-size: 0.82rem; font-weight: 800; text-align: center; }
+  .perf-gap { text-align: left; }
+
+  /* Summary card kept for YTD cards */
+  @media print {
+    .header-actions, .month-nav, .modal-overlay, .toast { display: none !important; }
+    .main { padding: 0; }
+    .card { box-shadow: none; border: 1px solid #ddd; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .header-inner { padding: 12px 16px; }
+    .main { padding: 16px; }
+    .month-hero { flex-direction: column; gap: 16px; }
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .tenant-table { font-size: 0.82rem; }
+    .tenant-table thead th, .tenant-table td { padding: 9px 10px; }
+  }
+
+  .lift-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 0.72rem; color: var(--primary-light);
+    background: rgba(37,99,168,0.1);
+    padding: 2px 7px; border-radius: 10px;
+  }
+  .empty-badge {
+    font-size: 0.72rem; color: var(--text-muted);
+    background: #f1f5f9;
+    padding: 2px 7px; border-radius: 10px;
+  }
+
+  /* Apartment type badges */
+  .apt-type-badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 12px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .apt-type-badge.occ {
+    background: rgba(22,163,74,0.1);
+    color: #15803d;
+    border: 1px solid rgba(22,163,74,0.2);
+  }
+  .apt-type-badge.empty-apt {
+    background: #f1f5f9;
+    color: #94a3b8;
+    border: 1px solid #e2e8f0;
+  }
+  .apt-type-badge.lift {
+    background: rgba(37,99,168,0.1);
+    color: var(--primary-light);
+    border: 1px solid rgba(37,99,168,0.2);
+  }
+  .apt-type-badge.no-lift {
+    background: rgba(148,163,184,0.1);
+    color: #94a3b8;
+    border: 1px solid #e2e8f0;
+  }
+
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: white;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-muted);
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  .save-btn {
+    background: linear-gradient(135deg, var(--success), #15803d);
+    color: white;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 10px;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    transition: all 0.2s;
+    box-shadow: 0 2px 10px rgba(22,163,74,0.3);
+  }
+  .save-btn:hover { transform: translateY(-1px); }
+  .save-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .month-note {
+    background: linear-gradient(135deg, #fffbeb, #fef3c7);
+    border: 1px solid #fde68a;
+    border-radius: var(--radius-sm);
+    padding: 12px 18px;
+    font-size: 0.85rem;
+    color: var(--warning);
+    font-weight: 600;
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  /* YTD DASHBOARD */
+  .ytd-dashboard {
+    background: linear-gradient(135deg, #0f2744 0%, #1a3a5c 100%);
+    border-radius: var(--radius);
+    padding: 22px 26px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-lg);
+  }
+  .ytd-title {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .ytd-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .ytd-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    transition: background 0.2s;
+  }
+  .ytd-card:hover { background: rgba(255,255,255,0.11); }
+  .ytd-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .ytd-label { color: rgba(255,255,255,0.6); font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; }
+  .ytd-value { color: white; font-size: 1.4rem; font-weight: 900; line-height: 1; margin-bottom: 4px; }
+  .ytd-sub { color: rgba(255,255,255,0.45); font-size: 0.74rem; }
+  .ytd-income .ytd-value { color: #86efac; }
+  .ytd-expense .ytd-value { color: #fca5a5; }
+  .ytd-balance .ytd-value { color: var(--accent-light); }
+  .ytd-net .ytd-value { color: #93c5fd; }
+
+  /* STATEMENT BUTTON */
+  .stmt-btn {
+    background: rgba(37,99,168,0.1);
+    border: 1.5px solid rgba(37,99,168,0.25);
+    color: var(--primary-light);
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .stmt-btn:hover { background: var(--primary-light); color: white; border-color: var(--primary-light); }
+
+  /* STATEMENT MODAL */
+  .stmt-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 900;
+    padding: 20px;
+  }
+  .stmt-overlay.active { display: flex; }
+  .stmt-modal {
+    background: white;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    animation: slideIn 0.3s ease;
+  }
+  .stmt-header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    padding: 24px 26px 20px;
+    border-radius: 20px 20px 0 0;
+    position: sticky;
+    top: 0;
+  }
+  .stmt-header h3 { font-size: 1.15rem; font-weight: 800; }
+  .stmt-header p { opacity: 0.75; font-size: 0.83rem; margin-top: 3px; }
+  .stmt-totals {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 16px 26px;
+    background: #f8fafc;
+    border-bottom: 1px solid var(--border);
+  }
+  .stmt-total-item { text-align: center; }
+  .stmt-total-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-bottom: 3px; }
+  .stmt-total-value { font-size: 1.1rem; font-weight: 800; }
+  .stmt-total-value.green { color: var(--success); }
+  .stmt-total-value.red { color: var(--danger); }
+  .stmt-total-value.blue { color: var(--primary-light); }
+  .stmt-table { width: 100%; border-collapse: collapse; }
+  .stmt-table th {
+    background: #f1f5f9;
+    padding: 10px 16px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .stmt-table td {
+    padding: 10px 16px;
+    font-size: 0.88rem;
+    text-align: center;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .stmt-table tr:last-child td { border-bottom: none; }
+  .stmt-table tr.paid-row { background: #f0fdf4; }
+  .stmt-close-btn {
+    width: calc(100% - 32px);
+    margin: 16px;
+    padding: 12px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .stmt-close-btn:hover { background: var(--primary-light); }
+
+  /* EXPENSE DROPDOWN */
+  #expPreset {
+    transition: border 0.2s;
+  }
+  #expPreset:focus { border-color: var(--primary-light); outline: none; }
+  #expPreset optgroup { font-weight: 700; color: var(--primary); }
+  #expPreset option { font-weight: 400; color: var(--text); padding: 6px; }
+
+  /* MONTH SELECT */
+  #monthSelect option {
+    background: #1a3a5c;
+    color: white;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+    padding: 8px;
+  }
+  #monthSelect option:checked {
+    background: #2563a8;
+  }
+
+  /* LANGUAGE TOGGLE */
+  .btn-lang {
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.35);
+    color: white;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .btn-lang:hover { background: rgba(255,255,255,0.25); }
+
+  /* ADD EXPENSE BUTTON */
+  .btn-add-exp {
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 9px;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    font-size: 0.83rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(124,58,237,0.3);
+  }
+  .btn-add-exp:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(124,58,237,0.4); }
+
+  /* EXPENSE DELETE BUTTON */
+  .btn-del-exp {
+    background: none;
+    border: none;
+    color: #dc2626;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 2px 6px;
+    border-radius: 5px;
+    transition: background 0.15s;
+  }
+  .btn-del-exp:hover { background: #fee2e2; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-title">
+      <div class="header-logo">١٤</div>
+      <div class="header-text">
+        <h1 id="hdrTitle">عمارة 14 بالم الزهراء - الشطر السابع</h1>
+        <p id="hdrSub">نظام إدارة الصيانة والإيجار · 2026</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-lang" id="langBtn" onclick="toggleLang()">EN</button>
+      <div class="admin-badge" id="adminBadge">🔐 <span data-t="adminMode">وضع الإدارة</span></div>
+      <button class="btn-admin" id="adminBtn" onclick="handleAdminClick()">
+        🔑 <span id="adminBtnLabel">دخول الإدارة</span>
+      </button>
+    </div>
+  </div>
+  <div class="month-nav" style="padding:10px 24px;display:flex;align-items:center;gap:12px">
+    <label style="color:rgba(255,255,255,0.7);font-size:0.85rem;font-weight:600;white-space:nowrap" id="monthNavLabel">الشهر:</label>
+    <select id="monthSelect"
+      onchange="switchMonth(parseInt(this.value))"
+      style="flex:1;max-width:280px;padding:8px 14px;border:1.5px solid rgba(255,255,255,0.25);border-radius:9px;
+             background:rgba(255,255,255,0.1);color:white;font-family:'Cairo',sans-serif;font-size:0.92rem;
+             font-weight:700;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;
+             background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%228%22 viewBox=%220 0 12 8%22><path fill=%22white%22 d=%22M6 8L0 0h12z%22/></svg>');
+             background-repeat:no-repeat;background-position:left 12px center;padding-left:32px">
+    </select>
+    <div id="monthNavPaidDot" style="display:none;width:8px;height:8px;background:#22c55e;border-radius:50%;flex-shrink:0"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="mainContent"></div>
+
+<!-- PASSWORD MODAL -->
+<div class="modal-overlay" id="adminModal">
+  <div class="modal">
+    <h2>🔐 <span data-t="adminLoginTitle">دخول الإدارة</span></h2>
+    <p data-t="adminLoginDesc">أدخل كلمة المرور للوصول إلى صلاحيات التعديل وتسجيل المدفوعات</p>
+    <input type="password" class="modal-input" id="pwdInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="modal-error" id="pwdError" data-t="wrongPassword">كلمة المرور غير صحيحة. حاول مجدداً.</div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="checkPassword()" data-t="enter">دخول</button>
+      <button class="btn-secondary" onclick="closeModal()" data-t="cancel">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD EXPENSE MODAL -->
+<div class="modal-overlay" id="expenseModal">
+  <div class="modal" style="max-width:500px">
+    <h2>➕ <span data-t="addExpenseTitle">إضافة مصروف</span></h2>
+    <p id="expenseModalMonth" style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px"></p>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div>
+        <label style="font-size:0.82rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:6px" data-t="expenseName">نوع المصروف</label>
+        <select id="expPreset" style="width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:10px;font-family:'Cairo',sans-serif;font-size:0.95rem;outline:none;background:white;cursor:pointer;direction:rtl">
+          <option value="">— اختر أو اكتب أدناه —</option>
+        </select>
+      </div>
+      <div id="expNameWrap">
+        <label style="font-size:0.82rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:6px">اسم مخصص (إن لم يكن في القائمة)</label>
+        <input type="text" id="expName" class="modal-input" style="letter-spacing:0;text-align:right;direction:rtl" placeholder="مثال: تصليح بوابة...">
+      </div>
+      <div>
+        <label style="font-size:0.82rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:6px" data-t="expenseAmount">المبلغ (جنيه)</label>
+        <input type="number" id="expAmount" class="modal-input" style="letter-spacing:0" placeholder="0" min="1">
+      </div>
+      <div>
+        <label style="font-size:0.82rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:6px" data-t="expenseDoc">المستند</label>
+        <input type="text" id="expDoc" class="modal-input" style="letter-spacing:0;text-align:right;direction:rtl" placeholder="إيصال / فاتورة (اختياري)">
+      </div>
+    </div>
+    <div class="modal-actions" style="margin-top:20px">
+      <button class="btn-primary" onclick="saveExpense()" data-t="addExpenseBtn">إضافة</button>
+      <button class="btn-secondary" onclick="closeExpenseModal()" data-t="cancel">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- DUES MODAL -->
+<div id="duesModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);z-index:1200;align-items:center;justify-content:center;padding:20px">
+  <div style="background:white;border-radius:20px;width:100%;max-width:680px;max-height:85vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,0.2)">
+    <div id="duesModalContent"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+//  DATA
+// ============================================================
+const ADMIN_PASSWORD = 'Palm14@2026';
+
+// ============================================================
+//  LANGUAGE SYSTEM
+// ============================================================
+let lang = 'ar'; // 'ar' or 'en'
+
+const TRANS = {
+  ar: {
+    adminMode: 'وضع الإدارة', adminLoginTitle: 'دخول الإدارة',
+    adminLoginDesc: 'أدخل كلمة المرور للوصول إلى صلاحيات التعديل وتسجيل المدفوعات',
+    wrongPassword: 'كلمة المرور غير صحيحة. حاول مجدداً.',
+    enter: 'دخول', cancel: 'إلغاء',
+    addExpenseTitle: 'إضافة مصروف', addExpenseBtn: 'إضافة',
+    expenseName: 'اسم المصروف', expenseAmount: 'المبلغ (جنيه)', expenseDoc: 'المستند',
+    enterAdmin: 'دخول الإدارة', exitAdmin: 'خروج الإدارة',
+    hdrTitle: 'عمارة 14 بالم الزهراء - الشطر السابع',
+    hdrSub: 'نظام إدارة الصيانة والإيجار · 2026',
+    annualSummary: 'الملخص السنوي',
+    save: 'حفظ', addExpense: '+ إضافة مصروف',
+    filterAll: 'الكل', filterPaid: 'دفعوا', filterDue: 'لم يدفعوا', filterOverdue: 'متأخرات',
+    paidThisMonth: 'دفعوا هذا الشهر ✓', notPaidYet: 'لم يدفعوا بعد',
+    maintBal: 'رصيد الصيانة (ج)', liftBal: 'رصيد الأسانسير (ج)',
+    ytdTitle: 'الملخص التراكمي من يناير حتى',
+    ytdIncome: 'إجمالي الإيرادات المحصّلة', ytdExp: 'إجمالي المصروفات',
+    ytdBal: 'الرصيد الإجمالي المتاح', ytdNet: 'صافي الفائض (إيرادات - مصروفات)',
+    maintAcc: 'حساب الصيانة', liftAcc: 'حساب الأسانسير', combined: 'الإجمالي المجمع',
+    openBal: 'رصيد أول الشهر (مرحّل)', income: '+ إيرادات الشهر',
+    expenses: '− مصروفات الشهر', closeBal: 'رصيد آخر الشهر',
+    carriedTo: 'يُرحَّل لـ', tenantsTitle: 'السكان والمستحقات',
+    colName: 'الاسم', colApt: 'الشقة', colType: 'نوع الشقة',
+    colFee: 'القسط الشهري', colBal: 'الرصيد المتراكم',
+    colStatus: 'حالة الشهر', colStmt: 'كشف الحساب',
+    colMaint: 'صيانة', colLift: 'أسانسير', colPaid: 'دفع ✓',
+    expensesTitle: 'مصروفات', noData: 'لا توجد بيانات بعد لهذا الشهر',
+    occupied: 'ساكن', vacant: 'شاغر', withLift: '🛗 مشترك أسانسير', noLift: 'بدون أسانسير',
+    paidBadge: '✓ دفع هذا الشهر', overdueBadge: '⚠ متأخر', dueBadge: 'لم يدفع بعد',
+    paidFull: '✓ مدفوع بالكامل', stmtBtn: '📄 كشف',
+    stmtTitle: 'كشف حساب', stmtPrev: 'رصيد مرحّل من سنوات سابقة',
+    stmtExpected: 'إجمالي المستحق', stmtPaidTotal: 'إجمالي المدفوع', stmtBalance: 'الرصيد الحالي',
+    stmtMonth: 'الشهر', stmtDue: 'المستحق', stmtPaid: 'المدفوع', stmtStatus: 'الحالة',
+    stmtRunBal: 'الرصيد التراكمي', stmtClose: 'إغلاق',
+    prevBal: 'رصيد مرحّل من سنوات سابقة', noPrev: 'لا يوجد',
+    paidFull2: 'مدفوع بالكامل', overdue: 'متأخر', credit: 'رصيد',
+    stmtPaid2: '✓ مدفوع', partial: 'جزئي', notPaid: '⚠ لم يدفع',
+    deleteExp: 'حذف مصروف', expDeleted: 'تم حذف المصروف', expAdded: 'تم إضافة المصروف',
+    expNameRequired: 'أدخل اسم المصروف', expAmountRequired: 'أدخل مبلغاً صحيحاً',
+    addExpForMonth: 'إضافة مصروف لشهر',
+    buildingSubtitle: 'عمارة 14 بالم الزهراء — الشطر السابع',
+    annualHeroTitle: 'عمارة 14 بالم الزهراء — 2026',
+    annualHeroSub: 'تقرير شامل للإيرادات والمصروفات والأداء',
+    annualExecutive: 'الملخص التنفيذي السنوي',
+    liftSubscribers: 'مشتركو الأسانسير',
+    monthlyIncome: 'الإيرادات الشهرية (ج)',
+    monthlyExpenses: 'المصروفات الشهرية (ج)',
+    topExpenses: 'أعلى بنود المصروفات',
+    monthlyLedger: 'كشف شهري مجمع',
+    collectionPerf: 'أداء التحصيل من السكان',
+    openingBalCol: 'رصيد أول الشهر',
+    incomeCol: 'إيرادات',
+    expensesCol: 'مصروفات',
+    closingBalCol: 'رصيد آخر الشهر',
+    totalRow: 'الإجمالي',
+    prevYearBal: 'رصيد سابق',
+    prevYearDesc: 'مرحّل من سنوات سابقة',
+    overdueFromPrev: 'متأخر من سنوات سابقة',
+    creditBal: 'رصيد دائن',
+    egp: 'ج',
+    overdueSuffix: 'متأخر',
+    creditSuffix: 'رصيد',
+    liftSubscriber: 'مشترك أسانسير',
+    selectOrType: lang === 'en' ? '— Select or type below —' : '— اختر أو اكتب أدناه —',
+    customNameLabel: 'اسم مخصص (إن لم يكن في القائمة)',
+    customNamePlaceholder: 'مثال: تصليح بوابة...',
+    monthlyFeeDetail: 'صيانة + أسانسير',
+    monthlyFeeOnly: 'ج/شهر صيانة',
+    fullyPaidCheck: 'مدفوع بالكامل ✓',
+    leastCompliant: 'الأقل التزاماً أولاً',
+    allCompliant: 'مستأجر ملتزم بالسداد الكامل',
+    monthsLabel: 'أشهر',
+    kpiStartBal: 'رصيد بداية العام',
+    kpiRevenue: 'إجمالي الإيرادات المحصّلة',
+    kpiExpenses: 'إجمالي المصروفات',
+    kpiSurplus: 'صافي الفائض (إيرادات − مصروفات)',
+    kpiEndBal: 'رصيد نهاية العام',
+    kpiUnits: 'الشقق السكنية / الشاغرة',
+    kpiSubMaint: 'صيانة',
+    kpiSubLift: 'أسانسير',
+    kpiSubDuring: 'خلال الأشهر ذات البيانات',
+    noCompliantYet: 'جميع السكان ملتزمون بالسداد',
+    aptFrom: 'شقة',
+    until: 'حتى',
+    monthlyFeePerMonth: 'ج/شهر',
+    months: 'شهر',
+  },
+  en: {
+    adminMode: 'Admin Mode', adminLoginTitle: 'Admin Login',
+    adminLoginDesc: 'Enter the password to access editing and payment recording',
+    wrongPassword: 'Incorrect password. Please try again.',
+    enter: 'Login', cancel: 'Cancel',
+    addExpenseTitle: 'Add Expense', addExpenseBtn: 'Add',
+    expenseName: 'Expense Name', expenseAmount: 'Amount (EGP)', expenseDoc: 'Document',
+    enterAdmin: 'Admin Login', exitAdmin: 'Exit Admin',
+    hdrTitle: 'Building 14, Palm Al-Zahraa - Sector 7',
+    hdrSub: 'Maintenance & Revenue Management System · 2026',
+    annualSummary: 'Annual Summary',
+    save: 'Save', addExpense: '+ Add Expense',
+    filterAll: 'All', filterPaid: 'Paid', filterDue: 'Unpaid', filterOverdue: 'Overdue',
+    paidThisMonth: 'Paid this month ✓', notPaidYet: 'Not paid yet',
+    maintBal: 'Maintenance Balance (EGP)', liftBal: 'Elevator Balance (EGP)',
+    ytdTitle: 'YTD Summary: January to',
+    ytdIncome: 'Total Revenue Collected', ytdExp: 'Total Expenses',
+    ytdBal: 'Total Available Balance', ytdNet: 'Net Surplus (Revenue − Expenses)',
+    maintAcc: 'Maintenance Account', liftAcc: 'Elevator Account', combined: 'Combined Total',
+    openBal: 'Opening Balance (B/F)', income: '+ Monthly Revenue',
+    expenses: '− Monthly Expenses', closeBal: 'Closing Balance',
+    carriedTo: 'Carried to', tenantsTitle: 'Tenants & Balances',
+    colName: 'Name', colApt: 'Apt', colType: 'Type',
+    colFee: 'Monthly Fee', colBal: 'Cumulative Balance',
+    colStatus: 'This Month', colStmt: 'Statement',
+    colMaint: 'Maint.', colLift: 'Lift', colPaid: 'Paid ✓',
+    expensesTitle: 'Expenses', noData: 'No data yet for this month',
+    occupied: 'Occupied', vacant: 'Vacant', withLift: '🛗 Lift Subscriber', noLift: 'No Lift',
+    paidBadge: '✓ Paid', overdueBadge: '⚠ Overdue', dueBadge: 'Not paid',
+    paidFull: '✓ Fully Paid', stmtBtn: '📄 Statement',
+    stmtTitle: 'Account Statement', stmtPrev: 'Balance B/F from previous years',
+    stmtExpected: 'Total Due', stmtPaidTotal: 'Total Paid', stmtBalance: 'Current Balance',
+    stmtMonth: 'Month', stmtDue: 'Due', stmtPaid: 'Paid', stmtStatus: 'Status',
+    stmtRunBal: 'Running Balance', stmtClose: 'Close',
+    prevBal: 'Balance B/F from previous years', noPrev: 'None',
+    paidFull2: 'Fully Paid', overdue: 'overdue', credit: 'credit',
+    stmtPaid2: '✓ Paid', partial: 'Partial', notPaid: '⚠ Not Paid',
+    deleteExp: 'Delete Expense', expDeleted: 'Expense deleted', expAdded: 'Expense added',
+    expNameRequired: 'Enter expense name', expAmountRequired: 'Enter a valid amount',
+    addExpForMonth: 'Add expense for',
+    buildingSubtitle: 'Building 14, Palm Al-Zahraa — Sector 7',
+    annualHeroTitle: 'Building 14, Palm Al-Zahraa — 2026',
+    annualHeroSub: 'Full Report: Revenue, Expenses & Performance',
+    annualExecutive: 'Annual Executive Summary',
+    liftSubscribers: 'Lift Subscribers',
+    monthlyIncome: 'Monthly Revenue (EGP)',
+    monthlyExpenses: 'Monthly Expenses (EGP)',
+    topExpenses: 'Top Expense Items',
+    monthlyLedger: 'Monthly Summary Ledger',
+    collectionPerf: 'Tenant Collection Performance',
+    openingBalCol: 'Opening Balance',
+    incomeCol: 'Revenue',
+    expensesCol: 'Expenses',
+    closingBalCol: 'Closing Balance',
+    totalRow: 'Total',
+    prevYearBal: 'Prior Balance',
+    prevYearDesc: 'Carried forward from previous years',
+    overdueFromPrev: 'overdue from previous years',
+    creditBal: 'credit balance',
+    egp: 'EGP',
+    overdueSuffix: 'overdue',
+    creditSuffix: 'credit',
+    liftSubscriber: 'Lift Subscriber',
+    selectOrType: '— Select or type below —',
+    customNameLabel: 'Custom name (if not in list)',
+    customNamePlaceholder: 'e.g. Gate repair...',
+    monthlyFeeDetail: 'maint + lift',
+    monthlyFeeOnly: 'EGP/mo (maint only)',
+    fullyPaidCheck: 'Fully Paid ✓',
+    leastCompliant: 'Least compliant first',
+    allCompliant: 'tenant(s) fully compliant',
+    monthsLabel: 'months',
+    kpiStartBal: 'Opening Balance (YTD)',
+    kpiRevenue: 'Total Revenue Collected',
+    kpiExpenses: 'Total Expenses',
+    kpiSurplus: 'Net Surplus (Revenue − Expenses)',
+    kpiEndBal: 'Year-End Balance',
+    kpiUnits: 'Occupied / Vacant Units',
+    kpiSubMaint: 'Maint.',
+    kpiSubLift: 'Lift',
+    kpiSubDuring: 'For months with data',
+    noCompliantYet: 'All tenants fully compliant',
+    aptFrom: 'Apt',
+    until: 'until',
+    monthlyFeePerMonth: 'EGP/mo',
+    months: 'month(s)',
+  }
+};
+
+function t(key) { return TRANS[lang][key] || TRANS['ar'][key] || key; }
+
+function toggleLang() {
+  lang = lang === 'ar' ? 'en' : 'ar';
+  const isAr = lang === 'ar';
+  document.documentElement.lang = lang;
+  document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+  document.getElementById('langBtn').textContent = isAr ? 'EN' : 'ع';
+  document.getElementById('hdrTitle').textContent = t('hdrTitle');
+  document.getElementById('hdrSub').textContent = t('hdrSub');
+  document.getElementById('adminBtnLabel').textContent = isAdmin ? t('exitAdmin') : t('enterAdmin');
+  // Flip header inner layout
+  const hi = document.querySelector('.header-inner');
+  if (hi) hi.style.flexDirection = isAr ? 'row' : 'row-reverse';
+  // Flip month select padding for arrow
+  const ms = document.getElementById('monthSelect');
+  if (ms) {
+    ms.style.paddingLeft  = isAr ? '32px' : '14px';
+    ms.style.paddingRight = isAr ? '14px' : '32px';
+    ms.style.backgroundPosition = isAr ? 'left 12px center' : 'right 12px center';
+    ms.style.direction = isAr ? 'rtl' : 'ltr';
+  }
+  // Flip month nav label direction
+  const lbl = document.getElementById('monthNavLabel');
+  if (lbl) lbl.style.order = isAr ? '0' : '2';
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    el.textContent = t(key);
+  });
+  renderAll();
+}
+
+const MONTHS = [
+  { key: 'jan', label: 'يناير', labelEn: 'January',   ar: 'يناير 2026',   en: 'January 2026' },
+  { key: 'feb', label: 'فبراير', labelEn: 'February',  ar: 'فبراير 2026',  en: 'February 2026' },
+  { key: 'mar', label: 'مارس',  labelEn: 'March',      ar: 'مارس 2026',    en: 'March 2026' },
+  { key: 'apr', label: 'أبريل', labelEn: 'April',      ar: 'أبريل 2026',   en: 'April 2026' },
+  { key: 'may', label: 'مايو',  labelEn: 'May',        ar: 'مايو 2026',    en: 'May 2026' },
+  { key: 'jun', label: 'يونيو', labelEn: 'June',       ar: 'يونيو 2026',   en: 'June 2026' },
+  { key: 'jul', label: 'يوليو', labelEn: 'July',       ar: 'يوليو 2026',   en: 'July 2026' },
+  { key: 'aug', label: 'أغسطس', labelEn: 'August',     ar: 'أغسطس 2026',   en: 'August 2026' },
+  { key: 'sep', label: 'سبتمبر',labelEn: 'September',  ar: 'سبتمبر 2026',  en: 'September 2026' },
+  { key: 'oct', label: 'أكتوبر',labelEn: 'October',    ar: 'أكتوبر 2026',  en: 'October 2026' },
+  { key: 'nov', label: 'نوفمبر',labelEn: 'November',   ar: 'نوفمبر 2026',  en: 'November 2026' },
+  { key: 'dec', label: 'ديسمبر',labelEn: 'December',   ar: 'ديسمبر 2026',  en: 'December 2026' },
+];
+function mLabel(m) { return lang === 'en' ? m.labelEn : m.label; }
+function mFull(m)  { return lang === 'en' ? m.en : m.ar; }
+
+// Fee rules per tenant (based on Excel data):
+// occupied + usesLift → 600 (500 maintenance + 100 elevator)
+// occupied + noLift   → 500
+// empty + usesLift    → 400
+// empty + noLift      → 300
+const TENANTS = [
+  { id:1,  name:'مريم اسحاق',         apt:'A1',  floor:1, usesLift:false, occupied:true  },
+  { id:2,  name:'وليد مدحت',          apt:'A2',  floor:1, usesLift:false, occupied:true  },
+  { id:3,  name:'ناريمان ظريف',       apt:'B1',  floor:1, usesLift:false, occupied:false },
+  { id:4,  name:'هند صادق',           apt:'B2',  floor:1, usesLift:false, occupied:true  },
+  { id:5,  name:'شريف جداره',         apt:'A11', floor:2, usesLift:true,  occupied:true  },
+  { id:6,  name:'سامح السعيد',        apt:'A12', floor:2, usesLift:true,  occupied:true  },
+  { id:7,  name:'احمد يونس',          apt:'A13', floor:2, usesLift:false, occupied:false },
+  { id:8,  name:'محمد ابو بكر',       apt:'B11', floor:2, usesLift:false, occupied:true  },
+  { id:9,  name:'خالد خشبه',          apt:'B12', floor:2, usesLift:false, occupied:true  },
+  { id:10, name:'خالد عبد الصمد',     apt:'B13', floor:2, usesLift:true,  occupied:true  },
+  { id:11, name:'أشرف علوي',          apt:'A21', floor:3, usesLift:true,  occupied:true  },
+  { id:12, name:'ايهاب محمود',        apt:'A23', floor:3, usesLift:true,  occupied:true  },
+  { id:13, name:'أسامه حسين',         apt:'B21', floor:3, usesLift:true,  occupied:true  },
+  { id:14, name:'مي اسامة',           apt:'B22', floor:3, usesLift:true,  occupied:true  },
+  { id:15, name:'محمد هلال',          apt:'B23', floor:3, usesLift:true,  occupied:true  },
+  { id:16, name:'وجدي محروس',         apt:'A31', floor:4, usesLift:true,  occupied:true  },
+  { id:17, name:'عمرو عبدالرازق',     apt:'A32', floor:4, usesLift:true,  occupied:true  },
+  { id:18, name:'مدام اميرة',         apt:'A33', floor:4, usesLift:false, occupied:false },
+  { id:19, name:'ابراهيم محمد',       apt:'B31', floor:4, usesLift:true,  occupied:true  },
+  { id:20, name:'مصطفى عبد الصبور',  apt:'B32', floor:4, usesLift:true,  occupied:true  },
+  { id:21, name:'هناء سلامه',         apt:'B33', floor:4, usesLift:true,  occupied:true  },
+  { id:22, name:'علي محمد نور الدين', apt:'A41', floor:5, usesLift:true,  occupied:true  },
+  { id:23, name:'محمد شاكر',          apt:'A43', floor:5, usesLift:true,  occupied:true  },
+  { id:24, name:'محمد السيسي',        apt:'B41', floor:5, usesLift:true,  occupied:true  },
+  { id:25, name:'حسام رياض',          apt:'B42', floor:5, usesLift:true,  occupied:true  },
+  { id:26, name:'ساره عادل',          apt:'B43', floor:5, usesLift:true,  occupied:true  },
+];
+
+// Monthly payment amounts from Excel YTD Income sheet (0 = did NOT pay that month)
+// tenantId: [jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec]
+// Maintenance amounts paid per tenant per month — from Excel "Annual income (maintenenace)" sheet
+// tenantId: [jan, feb, mar, apr, may, jun..dec]
+const MONTHLY_MAINT_PAID = {
+  1:  [500,  0,    500,  500,  500,  0,0,0,0,0,0,0],
+  2:  [500,  500,  500,  500,  500,  0,0,0,0,0,0,0],
+  3:  [0,    0,    0,    0,    0,    0,0,0,0,0,0,0],
+  4:  [500,  500,  500,  500,  500,  0,0,0,0,0,0,0],
+  5:  [500,  500,  1000, 500,  500,  0,0,0,0,0,0,0],
+  6:  [500,  500,  500,  500,  500,  0,0,0,0,0,0,0],
+  7:  [0,    0,    0,    0,    0,    0,0,0,0,0,0,0],
+  8:  [300,  0,    600,  300,  300,  0,0,0,0,0,0,0],
+  9:  [500,  500,  500,  500,  500,  0,0,0,0,0,0,0],
+  10: [0,    0,    1000, 1000, 0,    0,0,0,0,0,0,0],
+  11: [0,    0,    2000, 0,    0,    0,0,0,0,0,0,0],
+  12: [500,  500,  500,  500,  0,    0,0,0,0,0,0,0],
+  13: [3000, 3000, 0,    0,    0,    0,0,0,0,0,0,0],
+  14: [300,  0,    1000, 500,  500,  0,0,0,0,0,0,0],
+  15: [0,    0,    1500, 500,  500,  0,0,0,0,0,0,0],
+  16: [0,    0,    0,    0,    0,    0,0,0,0,0,0,0],
+  17: [500,  0,    0,    0,    0,    0,0,0,0,0,0,0],
+  18: [0,    0,    0,    0,    0,    0,0,0,0,0,0,0],
+  19: [500,  500,  500,  500,  0,    0,0,0,0,0,0,0],
+  20: [500,  500,  600,  0,    500,  0,0,0,0,0,0,0],
+  21: [500,  1000, 0,    0,    1000, 0,0,0,0,0,0,0],
+  22: [500,  500,  500,  500,  500,  0,0,0,0,0,0,0],
+  23: [4900, 500,  500,  500,  500,  0,0,0,0,0,0,0],
+  24: [500,  0,    500,  500,  1000, 0,0,0,0,0,0,0],
+  25: [500,  500,  500,  500,  500,  0,0,0,0,0,0,0],
+  26: [0,    0,    0,    1200, 300,  0,0,0,0,0,0,0],
+};
+
+// Elevator (lift) amounts paid per tenant per month — from Excel "Annual income ( Elevator)" sheet
+// Only tenants with usesLift=true contribute
+const MONTHLY_LIFT_PAID = {
+  1:  [0,0,0,0,0,  0,0,0,0,0,0,0],
+  2:  [0,0,0,0,0,  0,0,0,0,0,0,0],
+  3:  [0,0,0,0,0,  0,0,0,0,0,0,0],
+  4:  [0,0,0,0,0,  0,0,0,0,0,0,0],
+  5:  [100, 100, 200, 100, 100, 0,0,0,0,0,0,0],
+  6:  [100, 100, 100, 100, 100, 0,0,0,0,0,0,0],
+  7:  [0,0,0,0,0,  0,0,0,0,0,0,0],
+  8:  [0,0,0,0,0,  0,0,0,0,0,0,0],
+  9:  [0,0,0,0,0,  0,0,0,0,0,0,0],
+  10: [0,    0,    200,  200,  0,    0,0,0,0,0,0,0],
+  11: [0,    0,    400,  0,    0,    0,0,0,0,0,0,0],
+  12: [100,  100,  100,  100,  0,    0,0,0,0,0,0,0],
+  13: [1000, 0,    0,    0,    0,    0,0,0,0,0,0,0],
+  14: [100,  0,    200,  100,  100,  0,0,0,0,0,0,0],
+  15: [0,    0,    0,    100,  100,  0,0,0,0,0,0,0],
+  16: [0,    0,    0,    0,    0,    0,0,0,0,0,0,0],
+  17: [100,  0,    0,    0,    0,    0,0,0,0,0,0,0],
+  18: [0,0,0,0,0,  0,0,0,0,0,0,0],
+  19: [100,  100,  100,  100,  0,    0,0,0,0,0,0,0],
+  20: [100,  100,  600,  0,    100,  0,0,0,0,0,0,0],
+  21: [100,  200,  0,    0,    200,  0,0,0,0,0,0,0],
+  22: [100,  100,  100,  100,  100,  0,0,0,0,0,0,0],
+  23: [700,  100,  100,  100,  100,  0,0,0,0,0,0,0],
+  24: [100,  0,    100,  100,  200,  0,0,0,0,0,0,0],
+  25: [100,  100,  100,  100,  100,  0,0,0,0,0,0,0],
+  26: [0,    0,    0,    400,  100,  0,0,0,0,0,0,0],
+};
+
+// Combined paid for backward-compat (used by didPayThisMonth & hero counter)
+const MONTHLY_PAID_AMOUNT = {};
+for (let id = 1; id <= 26; id++) {
+  MONTHLY_PAID_AMOUNT[id] = (MONTHLY_MAINT_PAID[id] || Array(12).fill(0)).map(
+    (v, i) => v + ((MONTHLY_LIFT_PAID[id] || Array(12).fill(0))[i] || 0)
+  );
+}
+
+// ============================================================
+//  STATE
+// ============================================================
+let isAdmin = false;
+let currentMonth = 0;
+let filter = 'all';
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('palm14_payments_2026');
+    return raw ? JSON.parse(raw) : {};
+  } catch(e) { return {}; }
+}
+function saveState(state) {
+  localStorage.setItem('palm14_payments_2026', JSON.stringify(state));
+}
+
+// ============================================================
+//  CUSTOM EXPENSES (admin-added, stored in localStorage)
+// ============================================================
+function loadCustomExpenses() {
+  try {
+    const raw = localStorage.getItem('palm14_expenses_2026');
+    return raw ? JSON.parse(raw) : {};
+  } catch(e) { return {}; }
+}
+function saveCustomExpenses(data) {
+  localStorage.setItem('palm14_expenses_2026', JSON.stringify(data));
+}
+let customExpenses = loadCustomExpenses(); // { 'jun': [{name,amount,doc,id}], ... }
+
+// Predefined expense categories for dropdown
+const EXPENSE_PRESETS = [
+  { name_ar: 'راتب الحارس',                    name_en: 'Security Guard Salary',         category: 'رواتب / Salaries' },
+  { name_ar: 'عيدية البواب',                   name_en: 'Guard Bonus (Eid)',              category: 'رواتب / Salaries' },
+  { name_ar: 'أجرة الجنايني',                  name_en: 'Gardener Fee',                  category: 'رواتب / Salaries' },
+  { name_ar: 'فاتورة مياه',                    name_en: 'Water Bill',                    category: 'فواتير / Utilities' },
+  { name_ar: 'فاتورة كهرباء',                  name_en: 'Electricity Bill',               category: 'فواتير / Utilities' },
+  { name_ar: 'فاتورة غاز',                     name_en: 'Gas Bill',                      category: 'فواتير / Utilities' },
+  { name_ar: 'صيانة أسانسير',                  name_en: 'Elevator Maintenance',           category: 'صيانة / Maintenance' },
+  { name_ar: 'جركن زيت للأسانسير',             name_en: 'Elevator Oil',                  category: 'صيانة / Maintenance' },
+  { name_ar: 'شفرات أسانسير',                  name_en: 'Elevator Blades',               category: 'صيانة / Maintenance' },
+  { name_ar: 'تصليح موتور المياه',             name_en: 'Water Motor Repair',            category: 'صيانة / Maintenance' },
+  { name_ar: 'تصليح باب الجراج',               name_en: 'Garage Door Repair',            category: 'صيانة / Maintenance' },
+  { name_ar: 'تصليح الأسانسير',                name_en: 'Elevator Repair',               category: 'صيانة / Maintenance' },
+  { name_ar: 'تصليح انتركم',                   name_en: 'Intercom Repair',               category: 'صيانة / Maintenance' },
+  { name_ar: 'قطع غيار كهربائية',              name_en: 'Electrical Parts',              category: 'صيانة / Maintenance' },
+  { name_ar: 'دهان وصيانة السلالم',            name_en: 'Staircase Painting',            category: 'صيانة / Maintenance' },
+  { name_ar: 'مستلزمات نظافة',                 name_en: 'Cleaning Supplies',             category: 'نظافة / Cleaning' },
+  { name_ar: 'غيار ممسحة',                     name_en: 'Mop Replacement',               category: 'نظافة / Cleaning' },
+  { name_ar: 'خدمة نظافة',                     name_en: 'Cleaning Service',              category: 'نظافة / Cleaning' },
+  { name_ar: 'مبيد حشري',                      name_en: 'Pest Control',                  category: 'نظافة / Cleaning' },
+  { name_ar: 'شراء لمبات',                     name_en: 'Light Bulbs',                   category: 'لوازم / Supplies' },
+  { name_ar: 'باج جراج + سيكوريت',             name_en: 'Garage Badge + Security',       category: 'لوازم / Supplies' },
+  { name_ar: 'لوازم الحديقة',                  name_en: 'Garden Supplies',               category: 'لوازم / Supplies' },
+  { name_ar: 'تركيب وفك زينة رمضان',           name_en: 'Ramadan Decoration Install',    category: 'مصروفات عامة / General' },
+  { name_ar: 'عمولة تحويل',                    name_en: 'Transfer Commission',           category: 'مصروفات عامة / General' },
+  { name_ar: 'مصاريف متنوعة',                  name_en: 'Miscellaneous',                 category: 'مصروفات عامة / General' },
+  { name_ar: 'أخرى (يدوي)',                    name_en: 'Other (manual entry)',           category: '' },
+];
+
+function openAddExpense() {
+  const mName = mFull(MONTHS[currentMonth]);
+  document.getElementById('expenseModalMonth').textContent =
+    (lang === 'en' ? 'Adding expense for: ' : 'إضافة مصروف لشهر: ') + mName;
+  document.getElementById('expAmount').value = '';
+  document.getElementById('expDoc').value = '';
+  document.getElementById('expName').value = '';
+
+  // Build grouped dropdown
+  const sel = document.getElementById('expPreset');
+  if (sel) {
+    sel.innerHTML = '<option value="">' + (lang === 'en' ? '— Select or type below —' : lang === 'en' ? '— Select or type below —' : '— اختر أو اكتب أدناه —') + '</option>';
+    let lastCat = '';
+    EXPENSE_PRESETS.forEach(function(p) {
+      if (p.category && p.category !== lastCat) {
+        const og = document.createElement('optgroup');
+        og.label = p.category;
+        sel.appendChild(og);
+        lastCat = p.category;
+      }
+      const opt = document.createElement('option');
+      opt.value = lang === 'en' ? p.name_en : p.name_ar;
+      opt.textContent = lang === 'en' ? p.name_en : p.name_ar;
+      sel.appendChild(opt);
+    });
+    sel.onchange = function() {
+      if (sel.value && sel.value !== (lang === 'en' ? 'Other (manual entry)' : 'أخرى (يدوي)')) {
+        document.getElementById('expName').value = sel.value;
+        document.getElementById('expName').style.display = 'none';
+      } else if (sel.value === (lang === 'en' ? 'Other (manual entry)' : 'أخرى (يدوي)') || !sel.value) {
+        document.getElementById('expName').value = '';
+        document.getElementById('expName').style.display = 'block';
+        document.getElementById('expName').focus();
+      }
+    };
+  }
+  document.getElementById('expName').style.display = 'block';
+  document.getElementById('expenseModal').classList.add('active');
+  setTimeout(() => document.getElementById('expAmount').focus(), 100);
+}
+
+function closeExpenseModal() {
+  document.getElementById('expenseModal').classList.remove('active');
+}
+
+function saveExpense() {
+  const preset = document.getElementById('expPreset').value;
+  const manual = document.getElementById('expName').value.trim();
+  const name   = preset && preset !== (lang === 'en' ? 'Other (manual entry)' : 'أخرى (يدوي)') ? preset : manual;
+  const amount = parseFloat(document.getElementById('expAmount').value);
+  const doc    = document.getElementById('expDoc').value.trim();
+  if (!name) { showToast(t('expNameRequired'), 'error'); return; }
+  if (!amount || amount <= 0) { showToast(t('expAmountRequired'), 'error'); return; }
+  const mKey = getMonthKey(currentMonth);
+  if (!customExpenses[mKey]) customExpenses[mKey] = [];
+  customExpenses[mKey].push({ name, amount: -Math.abs(amount), doc, id: Date.now() });
+  updateBalanceChain();
+  saveCustomExpenses(customExpenses);
+  closeExpenseModal();
+  showToast(t('expAdded') + ': ' + name, 'success');
+  renderAll();
+}
+
+// ============================================================
+//  DUES MODAL
+// ============================================================
+function showDuesModal() {
+  const mIdx = currentMonth;
+  const mKey = getMonthKey(mIdx);
+
+  const rows = TENANTS.map(tn => {
+    const fee    = getMonthlyFee(tn);
+    const excelM = (MONTHLY_MAINT_PAID[tn.id]||[])[mIdx] || 0;
+    const excelL = (MONTHLY_LIFT_PAID[tn.id] ||[])[mIdx] || 0;
+    const ap     = payments[mKey] && payments[mKey][tn.id];
+    const paid   = ap ? Math.max(excelM, ap.maint||0) + Math.max(excelL, ap.lift||0) : excelM + excelL;
+    const monthDue = fee.total - paid;
+    const cumDue   = getCumulativeDue(tn.id, mIdx);
+    return { tn, fee, paid, monthDue, cumDue };
+  });
+
+  const withMonthDue = rows.filter(r => r.monthDue > 0);
+  const withCumDue   = rows.filter(r => r.cumDue < 0);
+  const totalMonthDue = withMonthDue.reduce((s, r) => s + r.monthDue, 0);
+  const totalCumDue   = withCumDue.reduce((s, r) => s + Math.abs(r.cumDue), 0);
+
+  const makeRow = r => '<tr style="border-bottom:1px solid #f1f5f9">'
+    + '<td style="padding:10px 14px;font-weight:700">' + r.tn.name + '</td>'
+    + '<td style="padding:10px 14px;text-align:center"><span style="background:#1a3a5c;color:white;padding:2px 8px;border-radius:10px;font-size:0.75rem">' + r.tn.apt + '</span></td>'
+    + '<td style="padding:10px 14px;text-align:center;color:#94a3b8">' + r.fee.total + ' ' + t('egp') + '</td>'
+    + '<td style="padding:10px 14px;text-align:center;color:#16a34a;font-weight:600">' + (r.paid > 0 ? r.paid.toLocaleString() : '—') + '</td>'
+    + '<td style="padding:10px 14px;text-align:center;color:#dc2626;font-weight:700">' + (r.monthDue > 0 ? r.monthDue.toLocaleString() : '<span style="color:#16a34a">✓</span>') + '</td>'
+    + '<td style="padding:10px 14px;text-align:center;font-weight:700;color:' + (r.cumDue < 0 ? '#dc2626' : r.cumDue > 0 ? '#2563a8' : '#16a34a') + '">'
+    + (r.cumDue < 0 ? '(' + Math.abs(r.cumDue).toLocaleString() + ')' : r.cumDue > 0 ? '+' + r.cumDue.toLocaleString() : '✓') + '</td>'
+    + '</tr>';
+
+  document.getElementById('duesModalContent').innerHTML =
+    '<div style="background:linear-gradient(135deg,#1a3a5c,#dc2626);color:white;padding:22px 26px;border-radius:20px 20px 0 0">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center">'
+    + '<div><div style="font-size:0.8rem;opacity:0.75;margin-bottom:3px">' + mFull(MONTHS[mIdx]) + '</div>'
+    + '<h3 style="font-size:1.2rem;font-weight:800;margin:0">' + (lang==='en'?'Outstanding Dues':'المبالغ المستحقة') + '</h3></div>'
+    + '<button onclick="document.getElementById(\'duesModal\').style.display=\'none\'" style="background:rgba(255,255,255,0.15);border:none;color:white;width:32px;height:32px;border-radius:50%;font-size:1.2rem;cursor:pointer;font-family:Cairo,sans-serif">✕</button>'
+    + '</div></div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px 20px">'
+    + '<div style="background:#fff5f5;border-radius:10px;padding:14px 16px">'
+    + '<div style="font-size:0.75rem;color:#b91c1c;font-weight:700;margin-bottom:3px">' + (lang==='en'?'This Month Due':'مستحق هذا الشهر') + '</div>'
+    + '<div style="font-size:1.4rem;font-weight:900;color:#dc2626">' + totalMonthDue.toLocaleString() + ' ' + t('egp') + '</div>'
+    + '<div style="font-size:0.75rem;color:#94a3b8;margin-top:2px">' + withMonthDue.length + ' ' + (lang==='en'?'tenants':'مستأجر') + '</div>'
+    + '</div>'
+    + '<div style="background:#fff5f5;border-radius:10px;padding:14px 16px">'
+    + '<div style="font-size:0.75rem;color:#b91c1c;font-weight:700;margin-bottom:3px">' + (lang==='en'?'Total Cumulative Overdue':'إجمالي المتأخرات') + '</div>'
+    + '<div style="font-size:1.4rem;font-weight:900;color:#dc2626">' + totalCumDue.toLocaleString() + ' ' + t('egp') + '</div>'
+    + '<div style="font-size:0.75rem;color:#94a3b8;margin-top:2px">' + withCumDue.length + ' ' + (lang==='en'?'tenants':'مستأجر') + '</div>'
+    + '</div></div>'
+    + '<div style="overflow-x:auto;padding:0 6px 16px">'
+    + '<table style="width:100%;border-collapse:collapse;font-family:Cairo,sans-serif;font-size:0.85rem">'
+    + '<thead><tr style="background:#f8fafc">'
+    + '<th style="padding:10px 14px;text-align:right;color:#64748b;font-weight:700">' + t('colName') + '</th>'
+    + '<th style="padding:10px 14px;text-align:center;color:#64748b;font-weight:700">' + t('colApt') + '</th>'
+    + '<th style="padding:10px 14px;text-align:center;color:#64748b;font-weight:700">' + t('colFee') + '</th>'
+    + '<th style="padding:10px 14px;text-align:center;color:#64748b;font-weight:700">' + (lang==='en'?'Paid':'مدفوع') + '</th>'
+    + '<th style="padding:10px 14px;text-align:center;color:#dc2626;font-weight:700">' + (lang==='en'?'Month Due':'متأخر الشهر') + '</th>'
+    + '<th style="padding:10px 14px;text-align:center;color:#dc2626;font-weight:700">' + (lang==='en'?'Total Balance':'الرصيد الكلي') + '</th>'
+    + '</tr></thead>'
+    + '<tbody>' + rows.map(makeRow).join('') + '</tbody>'
+    + '<tfoot><tr style="background:#1a3a5c;color:white">'
+    + '<td colspan="3" style="padding:10px 14px;font-weight:800">' + (lang==='en'?'Total':'الإجمالي') + '</td>'
+    + '<td style="padding:10px 14px;text-align:center;font-weight:800;color:#86efac">' + rows.reduce((s,r)=>s+r.paid,0).toLocaleString() + '</td>'
+    + '<td style="padding:10px 14px;text-align:center;font-weight:800;color:#fca5a5">' + totalMonthDue.toLocaleString() + '</td>'
+    + '<td style="padding:10px 14px;text-align:center;font-weight:800;color:#fca5a5">(' + totalCumDue.toLocaleString() + ')</td>'
+    + '</tr></tfoot>'
+    + '</table></div>';
+
+  document.getElementById('duesModal').style.display = 'flex';
+}
+
+document.addEventListener('click', function(e) {
+  const m = document.getElementById('duesModal');
+  if (m && e.target === m) m.style.display = 'none';
+});
+
+// IDs of hardcoded items deleted by admin — stored in localStorage
+function loadDeletedHardcoded() {
+  try { return JSON.parse(localStorage.getItem('palm14_del_hc_2026') || '{}'); } catch(e) { return {}; }
+}
+function saveDeletedHardcoded() {
+  localStorage.setItem('palm14_del_hc_2026', JSON.stringify(deletedHardcoded));
+}
+var deletedHardcoded = loadDeletedHardcoded(); // { 'jan_راتب الحارس': true, ... }
+
+// Overrides for hardcoded items edited by admin
+function loadEditedHardcoded() {
+  try { return JSON.parse(localStorage.getItem('palm14_edit_hc_2026') || '{}'); } catch(e) { return {}; }
+}
+function saveEditedHardcoded() {
+  localStorage.setItem('palm14_edit_hc_2026', JSON.stringify(editedHardcoded));
+}
+var editedHardcoded = loadEditedHardcoded(); // { 'jan_راتب الحارس': {name,amount,doc} }
+
+function getMonthExpenses(mKey) {
+  const baseItems = (EXPENSES[mKey] || []).filter(e => {
+    const key = mKey + '_' + e.name;
+    return !deletedHardcoded[key]; // exclude deleted hardcoded items
+  }).map(e => {
+    const key = mKey + '_' + e.name;
+    const override = editedHardcoded[key];
+    return override ? { ...e, name: override.name, amount: -Math.abs(override.amount), doc: override.doc, isCustom: false, _hcKey: key }
+                    : { ...e, isCustom: false, _hcKey: key };
+  });
+  const customItems = (customExpenses[mKey] || []).map(e => ({ ...e, amount: -Math.abs(e.amount), isCustom: true }));
+  return baseItems.concat(customItems);
+}
+
+function clearAllExpenses(mKey) {
+  if (!confirm(lang==='en' ? 'Clear ALL expenses for this month?' : 'مسح كل مصروفات هذا الشهر؟')) return;
+  // Delete all hardcoded items for this month
+  (EXPENSES[mKey] || []).forEach(e => { deletedHardcoded[mKey + '_' + e.name] = true; });
+  saveDeletedHardcoded();
+  // Delete all custom items for this month
+  customExpenses[mKey] = [];
+  saveCustomExpenses(customExpenses);
+  // Rebuild balance chain
+  updateBalanceChain();
+  saveState(payments);
+  renderAll();
+  showToast(lang==='en' ? 'All expenses cleared' : 'تم مسح كل المصروفات', 'success');
+}
+
+function deleteExpenseItem(mKey, id, isHardcoded) {
+  if (isHardcoded) {
+    // id is the _hcKey like 'may_راتب الحارس'
+    deletedHardcoded[id] = true;
+    saveDeletedHardcoded();
+  } else {
+    if (!customExpenses[mKey]) return;
+    const numId = typeof id === 'string' ? parseInt(id) : id;
+    const exp = customExpenses[mKey].find(e => e.id === numId);
+    if (exp && FINANCIALS[mKey]) FINANCIALS[mKey].expenses = (FINANCIALS[mKey].expenses || 0) + Math.abs(exp.amount);
+    customExpenses[mKey] = customExpenses[mKey].filter(e => e.id !== numId);
+    saveCustomExpenses(customExpenses);
+  }
+  updateBalanceChain();
+  renderAll();
+  showToast(lang==='en' ? 'Expense deleted' : 'تم حذف المصروف', 'success');
+}
+
+function editExpenseItem(mKey, name, amount, doc, id, isHardcoded) {
+  document.getElementById('editExpName').value   = name;
+  document.getElementById('editExpAmount').value = amount;
+  document.getElementById('editExpDoc').value    = doc;
+  document.getElementById('editExpKey').value    = mKey;
+  document.getElementById('editExpId').value     = id;
+  document.getElementById('editExpIsHardcoded').value = isHardcoded ? '1' : '0';
+  document.getElementById('editExpModal').style.display = 'flex';
+}
+
+function saveEditedExpense() {
+  const mKey       = document.getElementById('editExpKey').value;
+  const id         = document.getElementById('editExpId').value;
+  const isHC       = document.getElementById('editExpIsHardcoded').value === '1';
+  const newName    = document.getElementById('editExpName').value.trim();
+  const newAmount  = parseFloat(document.getElementById('editExpAmount').value) || 0;
+  const newDoc     = document.getElementById('editExpDoc').value.trim();
+  if (!newName || newAmount <= 0) { showToast(lang==='en'?'Fill all fields':'أدخل البيانات', 'error'); return; }
+
+  if (isHC) {
+    // Store override — id is the _hcKey
+    editedHardcoded[id] = { name: newName, amount: newAmount, doc: newDoc };
+    saveEditedHardcoded();
+  } else {
+    const numId = parseInt(id);
+    const items = customExpenses[mKey] || [];
+    const idx = items.findIndex(e => e.id === numId);
+    if (idx >= 0) items[idx] = { ...items[idx], name: newName, amount: -newAmount, doc: newDoc };
+    saveCustomExpenses(customExpenses);
+  }
+  updateBalanceChain();
+  document.getElementById('editExpModal').style.display = 'none';
+  renderAll();
+  showToast(lang==='en' ? 'Expense updated' : 'تم تحديث المصروف', 'success');
+}
+
+function deleteExpense(mKey, expId) {
+  if (!customExpenses[mKey]) return;
+  const exp = customExpenses[mKey].find(e => e.id === expId);
+  if (!exp) return;
+  // Restore to FINANCIALS
+  if (FINANCIALS[mKey]) FINANCIALS[mKey].expenses = (FINANCIALS[mKey].expenses || 0) + Math.abs(exp.amount);
+  customExpenses[mKey] = customExpenses[mKey].filter(e => e.id !== expId);
+  updateBalanceChain();
+  saveCustomExpenses(customExpenses);
+  showToast(t('expDeleted'), 'success');
+  renderAll();
+}
+
+
+// Summary financial data — from individual monthly sheets (more up to date than Summary Sheet)
+const FINANCIALS = {
+  jan: { prevBalance: 45771, income: 15500, expenses: -9925,  liftIncome: 2800, liftExpenses: -700,  prevLift: 35180 },
+  feb: { prevBalance: 51346, income: 9500,  expenses: -30605, liftIncome: 1000, liftExpenses: -700,  prevLift: 37280 },
+  mar: { prevBalance: 30241, income: 13200, expenses: -11140, liftIncome: 2300, liftExpenses: -700,  prevLift: 37580 },
+  apr: { prevBalance: 32301, income: 9500,  expenses: -9080,  liftIncome: 1600, liftExpenses: -700,  prevLift: 39180 },
+  may: { prevBalance: 32721, income: 8600,  expenses: 0,      liftIncome: 1300, liftExpenses: 0,     prevLift: 40080 },
+  jun: { prevBalance: 41321, income: 0,     expenses: 0,      liftIncome: 0,    liftExpenses: 0,     prevLift: 41380 },
+  jul: { prevBalance: 41321, income: 0,     expenses: 0,      liftIncome: 0,    liftExpenses: 0,     prevLift: 41380 },
+  aug: { prevBalance: 41321, income: 0,     expenses: 0,      liftIncome: 0,    liftExpenses: 0,     prevLift: 41380 },
+  sep: { prevBalance: 41321, income: 0,     expenses: 0,      liftIncome: 0,    liftExpenses: 0,     prevLift: 41380 },
+  oct: { prevBalance: 41321, income: 0,     expenses: 0,      liftIncome: 0,    liftExpenses: 0,     prevLift: 41380 },
+  nov: { prevBalance: 41321, income: 0,     expenses: 0,      liftIncome: 0,    liftExpenses: 0,     prevLift: 41380 },
+  dec: { prevBalance: 41321, income: 0,     expenses: 0,      liftIncome: 0,    liftExpenses: 0,     prevLift: 41380 },
+};
+
+// Expenses per month
+const EXPENSES = {
+  jan: [
+    { name: 'راتب الحارس',            amount: -3000, doc: 'إيصال' },
+    { name: 'فاتورة مياة',             amount: -2900, doc: '' },
+    { name: 'كهرباء',                  amount: -2400, doc: 'إيصال' },
+    { name: 'غيار ممسحة',              amount: -125,  doc: '' },
+    { name: 'أجرة الجنايني',           amount: -400,  doc: 'فاتورة' },
+    { name: 'مستلزمات نظافة',          amount: -500,  doc: 'إيصال' },
+    { name: 'جركن زيت للأسانسير',      amount: -600,  doc: 'إيصال' },
+  ],
+  feb: [
+    { name: 'راتب الحارس',                              amount: -3000,  doc: 'إيصال' },
+    { name: 'فاتورة مياة',                              amount: -3255,  doc: '' },
+    { name: 'كهرباء',                                   amount: -3000,  doc: 'إيصال' },
+    { name: 'غيار ممسحة',                               amount: -250,   doc: '' },
+    { name: 'أجرة الجنايني',                            amount: -400,   doc: 'فاتورة' },
+    { name: 'مستلزمات نظافة',                           amount: -500,   doc: 'إيصال' },
+    { name: 'تركيب وفك زينة رمضان',                    amount: -8750,  doc: 'إيصال' },
+    { name: 'جهاز شفرات الأسانسير B + مروحة أسانسير B', amount: -500,  doc: '' },
+    { name: 'ترنس',                                     amount: -150,   doc: '' },
+    { name: 'أوتوماتيك للماتور + بالونة موتور + تركيب', amount: -10000, doc: '' },
+    { name: 'انتركم + مصنعية',                          amount: -800,   doc: '' },
+  ],
+  mar: [
+    { name: 'راتب الحارس',          amount: -3000,  doc: 'إيصال' },
+    { name: 'فاتورة مياة',           amount: -1800,  doc: '' },
+    { name: 'كهرباء',               amount: -2500,  doc: 'إيصال' },
+    { name: 'غيار ممسحة',           amount: -125,   doc: '' },
+    { name: 'اجرة الجنايني',        amount: -400,   doc: 'فاتورة' },
+    { name: 'عيديه',                amount: -1500,  doc: 'إيصال' },
+    { name: 'مستلزمات نظافة',       amount: -500,   doc: 'إيصال' },
+    { name: 'باج جراج + سيكوريت',  amount: -850,   doc: 'إيصال' },
+    { name: 'لمبات',                amount: -465,   doc: 'إيصال' },
+  ],
+  apr: [
+    { name: 'راتب الحارس',          amount: -3000, doc: 'إيصال' },
+    { name: 'فاتورة مياة شهر مايو', amount: -1780, doc: '' },
+    { name: 'كهرباء',               amount: -2000, doc: 'إيصال' },
+    { name: 'غيار ممسحة',           amount: -300,  doc: '' },
+    { name: 'أجرة الجنايني',        amount: -400,  doc: 'فاتورة' },
+    { name: 'فك زينة',              amount: -350,  doc: 'إيصال' },
+    { name: 'نظافة',                amount: -500,  doc: 'إيصال' },
+    { name: 'تصليح موتور الغاطس الجراج', amount: -500, doc: '' },
+    { name: 'مصاريف موتور المياه',  amount: -250,  doc: '' },
+  ],
+  may: [],
+};
+
+// Recalculate prevBalance for all months after any expense change
+const BASE_FINANCIALS = {
+  jan: { prevBalance: 45771, income: 15500, expenses: -9925,  liftIncome: 2800, liftExpenses: -700,  prevLift: 35180 },
+  feb: { prevBalance: 51346, income: 9500,  expenses: -30605, liftIncome: 1000, liftExpenses: -700,  prevLift: 37280 },
+  mar: { prevBalance: 30241, income: 13200, expenses: -11140, liftIncome: 2300, liftExpenses: -700,  prevLift: 37580 },
+  apr: { prevBalance: 32301, income: 9500,  expenses: -9080,  liftIncome: 1600, liftExpenses: -700,  prevLift: 39180 },
+  may: { prevBalance: 32721, income: 8600,  expenses: 0,      liftIncome: 1300, liftExpenses: 0,     prevLift: 40080 },
+  jun: { prevBalance: 41321, income: 0,     expenses: 0,      liftIncome: 0,    liftExpenses: 0,     prevLift: 41380 },
+  jul: { prevBalance: 41321, income: 0,     expenses: 0,      liftIncome: 0,    liftExpenses: 0,     prevLift: 41380 },
+  aug: { prevBalance: 41321, income: 0,     expenses: 0,      liftIncome: 0,    liftExpenses: 0,     prevLift: 41380 },
+  sep: { prevBalance: 41321, income: 0,     expenses: 0,      liftIncome: 0,    liftExpenses: 0,     prevLift: 41380 },
+  oct: { prevBalance: 41321, income: 0,     expenses: 0,      liftIncome: 0,    liftExpenses: 0,     prevLift: 41380 },
+  nov: { prevBalance: 41321, income: 0,     expenses: 0,      liftIncome: 0,    liftExpenses: 0,     prevLift: 41380 },
+  dec: { prevBalance: 41321, income: 0,     expenses: 0,      liftIncome: 0,    liftExpenses: 0,     prevLift: 41380 },
+};
+function updateBalanceChain() {
+  // Rebuild FINANCIALS from BASE + custom expenses + admin extra payments
+  let prevMaint = BASE_FINANCIALS['jan'].prevBalance;
+  let prevLift  = BASE_FINANCIALS['jan'].prevLift;
+  MONTHS.forEach(function(m, i) {
+    const base      = BASE_FINANCIALS[m.key];
+    const custTotal = (customExpenses[m.key] || []).reduce((s, e) => s + e.amount, 0);
+    // extraPayments may not be declared yet on first call — guard with typeof
+    const ep        = (typeof extraPayments !== 'undefined' && extraPayments[m.key]) || {};
+    const extraAmt  = typeof ep === 'object' ? ((ep.current||0) + (ep.previous||0)) : (ep || 0);
+    FINANCIALS[m.key].prevBalance  = prevMaint;
+    FINANCIALS[m.key].prevLift     = prevLift;
+    FINANCIALS[m.key].income       = base.income;
+    FINANCIALS[m.key].expenses     = base.expenses + custTotal;
+    FINANCIALS[m.key].liftIncome   = base.liftIncome;
+    FINANCIALS[m.key].liftExpenses = base.liftExpenses;
+    prevMaint = prevMaint + base.income + base.expenses + custTotal + extraAmt;
+    prevLift  = prevLift  + base.liftIncome + base.liftExpenses;
+  });
+}
+// Apply any saved custom expenses on load
+updateBalanceChain();
+
+let payments = loadState();
+
+// Returns true if tenant paid something in that specific month (from Excel)
+function didPayThisMonth(tenantId, monthIdx) {
+  const arr = MONTHLY_PAID_AMOUNT[tenantId] || [];
+  const mKey = MONTHS[monthIdx].key;
+  if (payments[mKey] && payments[mKey][tenantId]?.paid) return true;
+  return (arr[monthIdx] || 0) > 0;
+}
+
+// Opening balance per tenant carried forward from previous years (negative = owes, positive = credit)
+// Source: January sheet columns "الصيانة مستحقة سابقا" + "م. اسانسير مستحقة سابقا"
+const OPENING_BALANCE = {
+  1:  0,     // مريم اسحاق
+  2:  0,     // وليد مدحت
+  3:  -5400, // ناريمان ظريف  (5400 maint from prev years)
+  4:  0,     // هند صادق
+  5:  0,     // شريف جداره
+  6:  0,     // سامح السعيد
+  7:  -2700, // احمد يونس   (2700 maint from prev years)
+  8:  0,     // محمد ابو بكر
+  9:  0,     // خالد خشبه
+  10: 0,     // خالد عبد الصمد
+  11: -600,  // أشرف علوي   (500 maint + 100 lift)
+  12: 0,     // ايهاب محمود
+  13: 0,     // أسامه حسين
+  14: 0,     // مي اسامة
+  15: -1500, // محمد هلال   (1500 lift from prev years)
+  16: 0,     // وجدي محروس
+  17: 0,     // عمرو عبدالرازق
+  18: 0,     // مدام اميرة
+  19: 0,     // ابراهيم محمد
+  20: -700,  // مصطفى عبد الصبور (300 maint + 400 lift)
+  21: 0,     // هناء سلامه
+  22: 0,     // علي محمد نور الدين
+  23: -5000, // محمد شاكر   (4400 maint + 600 lift)
+  24: 0,     // محمد السيسي
+  25: 0,     // حسام رياض
+  26: 0,     // ساره عادل
+};
+
+// Cumulative balance after month monthIdx (negative = still owes, positive = credit/overpaid)
+// = opening balance + sum of (paid - fee) for each month up to monthIdx
+
+function getMonthlyFee(tenant) {
+  if (tenant.occupied) {
+    return { maint: 500, lift: tenant.usesLift ? 100 : 0, total: tenant.usesLift ? 600 : 500 };
+  } else {
+    return { maint: tenant.usesLift ? 400 : 300, lift: 0, total: tenant.usesLift ? 400 : 300 };
+  }
+}
+
+function getMonthPayment(monthKey, tenantId) {
+  if (!payments[monthKey]) payments[monthKey] = {};
+  return payments[monthKey][tenantId] || { maint: 0, lift: 0, paid: false };
+}
+
+// Extra admin payments per tenant (lump sums) — declared early so getCumulativeDue can use it
+function loadExtraPayments() {
+  try {
+    var raw = JSON.parse(localStorage.getItem('palm14_extra_2026') || '{}');
+    // Migrate old format: was keyed by tenantId with {amount, monthIdx} objects
+    // New format: keyed by month key ('jan','feb',...) with plain number
+    var migrated = {};
+    var needsMigration = false;
+    Object.keys(raw).forEach(function(k) {
+      var v = raw[k];
+      if (typeof v === 'object' && v !== null && 'amount' in v && 'monthIdx' in v) {
+        // Old format: key was tenantId, value was {amount, monthIdx}
+        needsMigration = true;
+        var mKey = MONTHS[v.monthIdx] ? MONTHS[v.monthIdx].key : null;
+        if (mKey) migrated[mKey] = (migrated[mKey] || 0) + (v.amount || 0);
+      } else if (MONTHS.some(function(m){ return m.key === k; })) {
+        // Already correct format: key is month key
+        migrated[k] = v;
+      }
+    });
+    if (needsMigration) {
+      localStorage.setItem('palm14_extra_2026', JSON.stringify(migrated));
+      return migrated;
+    }
+    return raw;
+  } catch(e) { return {}; }
+}
+function saveExtraPayments() {
+  localStorage.setItem('palm14_extra_2026', JSON.stringify(extraPayments));
+}
+// extraPayments is keyed by MONTH KEY (e.g. 'may'), value = total EGP received that month
+// e.g. { 'may': 4200, 'jun': 1500 }
+var extraPayments = loadExtraPayments();
+// Rebuild balance chain immediately with any saved extra payments
+updateBalanceChain();
+
+function getCumulativeDue(tenantId, monthIdx) {
+  const fee = getMonthlyFee(TENANTS.find(x => x.id === tenantId));
+  let bal = OPENING_BALANCE[tenantId] || 0;
+  for (let i = 0; i <= monthIdx; i++) {
+    const maintPaid = (MONTHLY_MAINT_PAID[tenantId] || [])[i] || 0;
+    const liftPaid  = (MONTHLY_LIFT_PAID[tenantId]  || [])[i] || 0;
+    const adminPay  = payments[MONTHS[i].key] && payments[MONTHS[i].key][tenantId];
+    const recMaint  = adminPay ? Math.max(maintPaid, adminPay.maint||0) : maintPaid;
+    const recLift   = adminPay ? Math.max(liftPaid,  adminPay.lift||0)  : liftPaid;
+    bal = bal - fee.total + recMaint + recLift;
+    // Note: extraPayments is building-level (not per-tenant); handled in renderMain/getYTDStats
+  }
+  return bal;
+}
+
+// ============================================================
+//  RENDER
+// ============================================================
+function getMonthKey(idx) { return MONTHS[idx].key; }
+
+function renderMonthNav() {
+  const sel = document.getElementById('monthSelect');
+  const lbl = document.getElementById('monthNavLabel');
+  const dot = document.getElementById('monthNavPaidDot');
+  if (!sel) return;
+
+  if (lbl) lbl.textContent = lang === 'en' ? 'Month:' : 'الشهر:';
+
+  // Build options
+  sel.innerHTML = MONTHS.map((m, i) => {
+    const anyPaid = Object.values(payments[m.key] || {}).some(p => p.paid)
+      || TENANTS.some(tk => (MONTHLY_PAID_AMOUNT[tk.id]||[])[i] > 0);
+    return '<option value="' + i + '"' + (i === currentMonth ? ' selected' : '') + '>'
+      + (anyPaid ? '✓ ' : '') + mLabel(m) + ' 2026</option>';
+  }).join('');
+  // Annual option
+  sel.innerHTML += '<option value="12"' + (currentMonth === 12 ? ' selected' : '') + '>'
+    + (lang === 'en' ? '📊 Annual Summary' : '📊 الملخص السنوي') + '</option>';
+
+  // Show paid dot for current month
+  if (dot) {
+    const mKey = currentMonth < 12 ? MONTHS[currentMonth].key : null;
+    const hasPaid = mKey && (Object.values(payments[mKey] || {}).some(p => p.paid)
+      || TENANTS.some(tk => (MONTHLY_PAID_AMOUNT[tk.id]||[])[currentMonth] > 0));
+    dot.style.display = hasPaid ? 'block' : 'none';
+  }
+}
+
+function switchMonth(idx) {
+  currentMonth = idx;
+  renderAll();
+}
+
+function getFilteredTenants() {
+  const mKey = getMonthKey(currentMonth);
+  if (filter === 'all') return TENANTS;
+  if (filter === 'paid') return TENANTS.filter(t => didPayThisMonth(t.id, currentMonth));
+  if (filter === 'due') return TENANTS.filter(t => !didPayThisMonth(t.id, currentMonth));
+  if (filter === 'overdue') {
+    return TENANTS.filter(t => {
+      const due = getCumulativeDue(t.id, currentMonth);
+      return due < 0;
+    });
+  }
+  return TENANTS;
+}
+
+// ============================================================
+//  YTD CALCULATIONS
+// ============================================================
+// Returns extra admin-recorded arrears income for a specific month (by index)
+function getTotalAdminIncome(forMonthIdx) {
+  if (forMonthIdx === undefined) forMonthIdx = currentMonth;
+  var ep = extraPayments[MONTHS[forMonthIdx].key];
+  if (!ep) return 0;
+  if (typeof ep === 'object') return (ep.current || 0) + (ep.previous || 0);
+  return ep; // legacy plain number
+}
+
+function getYTDStats(upToMonthIdx) {
+  let totalIncome = 0, totalExpenses = 0, totalLiftIncome = 0, totalLiftExpenses = 0;
+  let ytdArrears = 0;
+  MONTHS.forEach((m, i) => {
+    if (i > upToMonthIdx) return;
+    const fin = FINANCIALS[m.key] || {};
+    totalIncome      += (fin.income || 0);
+    totalExpenses    += Math.abs(fin.expenses || 0);
+    totalLiftIncome  += (fin.liftIncome || 0);
+    totalLiftExpenses += Math.abs(fin.liftExpenses || 0);
+    ytdArrears       += getTotalAdminIncome(i);
+  });
+  // Closing balance = next month's opening (already correct via updateBalanceChain)
+  // If we're at Dec (last month), compute directly from Dec FINANCIALS
+  let closeMaint, closeLift;
+  if (upToMonthIdx < 11) {
+    const nextFin  = FINANCIALS[MONTHS[upToMonthIdx + 1].key] || {};
+    closeMaint = nextFin.prevBalance || 0;
+    closeLift  = nextFin.prevLift    || 0;
+  } else {
+    const fin2 = FINANCIALS['dec'] || {};
+    closeMaint = (fin2.prevBalance||0) + (fin2.income||0) + (fin2.expenses||0) + getTotalAdminIncome(11);
+    closeLift  = (fin2.prevLift||0)   + (fin2.liftIncome||0) + (fin2.liftExpenses||0);
+  }
+  const startFin = FINANCIALS['jan'] || {};
+  return { totalIncome: totalIncome + ytdArrears, totalExpenses, totalLiftIncome, totalLiftExpenses,
+           balance: closeMaint, liftBalance: closeLift,
+           startMaint: startFin.prevBalance || 0, startLift: startFin.prevLift || 0 };
+}
+
+// Tenant statement: total they should have paid YTD vs what's recorded
+function getTenantStatement(tenantId, upToMonthIdx) {
+  const tenant = TENANTS.find(x => x.id === tenantId);
+  const fee = getMonthlyFee(t);
+  let rows = [];
+  let totalExpected = 0, totalPaid = 0;
+
+  MONTHS.forEach((m, i) => {
+    if (i > upToMonthIdx) return;
+    const expected = fee.total;
+    const pay = getMonthPayment(m.key, tenantId);
+    const paidAmt = pay.paid ? (pay.maint + pay.lift) : 0;
+    // Also factor historical due for that month
+    const histDue = (HISTORICAL_DUE[tenantId] || [])[i] || 0;
+    totalExpected += expected;
+    totalPaid += paidAmt;
+    rows.push({ month: m.label, expected, paidAmt, paid: pay.paid, histDue });
+  });
+
+  const balance = getCumulativeDue(tenantId, upToMonthIdx); // from historical Excel
+  return { rows, totalExpected, totalPaid, balance };
+}
+
+// ============================================================
+//  RENDER MAIN
+// ============================================================
+function renderMain() {
+  const mIdx = currentMonth;
+  const mKey = getMonthKey(mIdx);
+  const fin = FINANCIALS[mKey] || {};
+  const filtered = getFilteredTenants();
+  const mPayments = payments[mKey] || {};
+
+  // Fix 3: Count paid = those who actually paid this month (from Excel + admin ticks)
+  const totalPaid = TENANTS.filter(t => didPayThisMonth(t.id, mIdx)).length;
+  const totalNotPaid = TENANTS.length - totalPaid;
+
+  const totalIncome   = fin.income || 0;
+  const totalExpenses = Math.abs(fin.expenses || 0);
+  const ep            = extraPayments[mKey] || {};
+  const extraCurrent  = typeof ep === 'object' ? (ep.current  || 0) : 0;
+  const extraPrevious = typeof ep === 'object' ? (ep.previous || 0) : (typeof ep === 'number' ? ep : 0);
+  const arrearsIn     = extraCurrent + extraPrevious;
+  // Use next month's opening balance (set by updateBalanceChain) as this month's closing
+  // This is the single source of truth and includes arrears correctly
+  const balance = mIdx < 11
+    ? (FINANCIALS[MONTHS[mIdx + 1].key].prevBalance || 0)
+    : (fin.prevBalance||0) + totalIncome + (fin.expenses||0) + arrearsIn;
+  const liftBalance = mIdx < 11
+    ? (FINANCIALS[MONTHS[mIdx + 1].key].prevLift || 0)
+    : (fin.prevLift||0) + (fin.liftIncome||0) + (fin.liftExpenses||0);
+
+  const expList = getMonthExpenses(mKey);
+  const totalExpItems = Math.abs(expList.reduce((s, e) => s + e.amount, 0));
+
+  // YTD stats
+  const ytd = getYTDStats(mIdx);
+
+  // ── Collection stats for current month ──────────────────────────────────────
+  // Total installments expected this month
+  const monthExpected = TENANTS.reduce((s, tn) => s + getMonthlyFee(tn).total, 0);
+  // Total actually collected this month (Excel + admin ticks)
+  const monthCollected = TENANTS.reduce((s, tn) => {
+    const excelM = (MONTHLY_MAINT_PAID[tn.id]||[])[mIdx] || 0;
+    const excelL = (MONTHLY_LIFT_PAID[tn.id] ||[])[mIdx] || 0;
+    const ap = payments[mKey] && payments[mKey][tn.id];
+    const recM = ap ? Math.max(excelM, ap.maint||0) : excelM;
+    const recL = ap ? Math.max(excelL, ap.lift||0)  : excelL;
+    return s + recM + recL;
+  }, 0) + arrearsIn;
+  const monthPct = monthExpected > 0 ? Math.round(monthCollected / monthExpected * 100) : 0;
+
+  // YTD collection rate (Jan → current month)
+  let ytdExpected = 0, ytdCollected = 0;
+  for (let mi = 0; mi <= mIdx; mi++) {
+    TENANTS.forEach(tn => { ytdExpected += getMonthlyFee(tn).total; });
+    TENANTS.forEach(tn => {
+      const excelM = (MONTHLY_MAINT_PAID[tn.id]||[])[mi] || 0;
+      const excelL = (MONTHLY_LIFT_PAID[tn.id] ||[])[mi] || 0;
+      const ap2 = payments[MONTHS[mi].key] && payments[MONTHS[mi].key][tn.id];
+      const rM = ap2 ? Math.max(excelM, ap2.maint||0) : excelM;
+      const rL = ap2 ? Math.max(excelL, ap2.lift||0)  : excelL;
+      ytdCollected += rM + rL;
+    });
+    ytdCollected += getTotalAdminIncome(mi);
+  }
+  const ytdPct = ytdExpected > 0 ? Math.round(ytdCollected / ytdExpected * 100) : 0;
+
+  // Dues breakdown for current month
+  const dueRows = TENANTS.map(tn => {
+    const fee  = getMonthlyFee(tn);
+    const excelM = (MONTHLY_MAINT_PAID[tn.id]||[])[mIdx] || 0;
+    const excelL = (MONTHLY_LIFT_PAID[tn.id] ||[])[mIdx] || 0;
+    const ap = payments[mKey] && payments[mKey][tn.id];
+    const paid = ap ? Math.max(excelM, ap.maint||0) + Math.max(excelL, ap.lift||0) : excelM + excelL;
+    const due  = fee.total - paid;
+    const cumDue = getCumulativeDue(tn.id, mIdx);
+    return { tn, fee, paid, due, cumDue };
+  }).filter(r => r.due > 0 || r.cumDue < 0);
+
+  const dueTotal     = dueRows.reduce((s, r) => s + Math.max(0, r.due), 0);
+  const cumDueTotal  = dueRows.filter(r => r.cumDue < 0).reduce((s, r) => s + Math.abs(r.cumDue), 0);
+
+  // Future months note
+  const hasFutureData = totalIncome === 0 && mIdx >= 5;
+  const futureNote = hasFutureData
+    ? `<div class="month-note">⏳ ${t('noData')} — ${mLabel(MONTHS[mIdx])}</div>`
+    : '';
+
+  document.getElementById('mainContent').innerHTML = `
+    <!-- Month Hero -->
+    <div class="month-hero">
+      <div class="month-hero-text">
+        <h2>${mFull(MONTHS[mIdx])}</h2>
+        <p>${t('buildingSubtitle')}</p>
+      </div>
+      <div class="month-hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-value" style="color:#86efac">${totalPaid}</div>
+          <div class="hero-stat-label">${t('paidThisMonth')}</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value" style="color:#fca5a5">${totalNotPaid}</div>
+          <div class="hero-stat-label">${t('notPaidYet')}</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">${balance.toLocaleString()}</div>
+          <div class="hero-stat-label">${t('maintBal')}</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">${liftBalance.toLocaleString()}</div>
+          <div class="hero-stat-label">${t('liftBal')}</div>
+        </div>
+      </div>
+    </div>
+
+    ${futureNote}
+
+    <!-- Two summary cards: Dues + Collection Rate -->
+    <div class="summary-grid" style="grid-template-columns:1fr 1fr;margin-bottom:20px">
+
+      <!-- Card 1: Due Amounts -->
+      <div class="card" style="cursor:pointer;transition:box-shadow 0.2s" onclick="showDuesModal()" onmouseover="this.style.boxShadow='0 8px 30px rgba(220,38,38,0.15)'" onmouseout="this.style.boxShadow=''">
+        <div style="padding:20px 22px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+            <div>
+              <div style="font-size:0.78rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">${lang==='en'?'Outstanding Dues':'المبالغ المستحقة'}</div>
+              <div style="font-size:1.6rem;font-weight:900;color:#dc2626">${dueTotal.toLocaleString()} ${t('egp')}</div>
+              <div style="font-size:0.8rem;color:#64748b;margin-top:3px">${lang==='en'?'This month · ':'هذا الشهر · '}${dueRows.filter(r=>r.due>0).length} ${lang==='en'?'tenants':'مستأجر'}</div>
+            </div>
+            <div style="font-size:2.2rem;opacity:0.15">⚠</div>
+          </div>
+          <div style="background:#fff5f5;border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:0.8rem;color:#b91c1c;font-weight:600">${lang==='en'?'Total cumulative overdue:':'إجمالي المتأخرات التراكمية:'}</div>
+            <div style="font-size:0.95rem;font-weight:800;color:#dc2626">${cumDueTotal.toLocaleString()} ${t('egp')}</div>
+          </div>
+          <div style="margin-top:10px;font-size:0.75rem;color:#94a3b8;text-align:center">${lang==='en'?'Click to view details →':'اضغط لعرض التفاصيل ←'}</div>
+        </div>
+      </div>
+
+      <!-- Card 2: Collection Rate -->
+      <div class="card">
+        <div style="padding:20px 22px">
+          <div style="font-size:0.78rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px">${lang==='en'?'Collection Rate':'نسبة التحصيل'}</div>
+          <!-- This month -->
+          <div style="margin-bottom:14px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+              <span style="font-size:0.82rem;font-weight:600;color:#374151">${lang==='en'?mLabel(MONTHS[mIdx]):mLabel(MONTHS[mIdx])}</span>
+              <span style="font-size:0.95rem;font-weight:900;color:${monthPct>=80?'#16a34a':monthPct>=50?'#d97706':'#dc2626'}">${monthPct}%</span>
+            </div>
+            <div style="height:10px;background:#f1f5f9;border-radius:5px;overflow:hidden">
+              <div style="height:100%;width:${Math.min(monthPct,100)}%;background:${monthPct>=80?'#16a34a':monthPct>=50?'#f59e0b':'#ef4444'};border-radius:5px;transition:width 0.5s"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:0.73rem;color:#94a3b8">
+              <span>${lang==='en'?'Collected: ':'محصّل: '}${monthCollected.toLocaleString()} ${t('egp')}</span>
+              <span>${lang==='en'?'Expected: ':'مستهدف: '}${monthExpected.toLocaleString()} ${t('egp')}</span>
+            </div>
+          </div>
+          <!-- YTD -->
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+              <span style="font-size:0.82rem;font-weight:600;color:#374151">${lang==='en'?'YTD (Jan–'+mLabel(MONTHS[mIdx])+')':'من يناير حتى '+mLabel(MONTHS[mIdx])}</span>
+              <span style="font-size:0.95rem;font-weight:900;color:${ytdPct>=80?'#16a34a':ytdPct>=50?'#d97706':'#dc2626'}">${ytdPct}%</span>
+            </div>
+            <div style="height:10px;background:#f1f5f9;border-radius:5px;overflow:hidden">
+              <div style="height:100%;width:${Math.min(ytdPct,100)}%;background:${ytdPct>=80?'#16a34a':ytdPct>=50?'#f59e0b':'#ef4444'};border-radius:5px;transition:width 0.5s"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:0.73rem;color:#94a3b8">
+              <span>${lang==='en'?'Collected: ':'محصّل: '}${ytdCollected.toLocaleString()} ${t('egp')}</span>
+              <span>${lang==='en'?'Expected: ':'مستهدف: '}${ytdExpected.toLocaleString()} ${t('egp')}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- YTD Dashboard (Fix 1) -->
+    <div class="ytd-dashboard">
+      <div class="ytd-title">📊 ${t('ytdTitle')} ${mLabel(MONTHS[mIdx])}</div>
+      <div class="ytd-grid">
+        <div class="ytd-card ytd-income">
+          <div class="ytd-icon">💰</div>
+          <div class="ytd-info">
+            <div class="ytd-label">${t('ytdIncome')}</div>
+            <div class="ytd-value">${(ytd.totalIncome + ytd.totalLiftIncome).toLocaleString()} ج</div>
+            <div class="ytd-sub">${t('kpiSubMaint')}: ${ytd.totalIncome.toLocaleString()} ${t('egp')} &nbsp;|&nbsp; ${t('kpiSubLift')}: ${ytd.totalLiftIncome.toLocaleString()} ${t('egp')}</div>
+          </div>
+        </div>
+        <div class="ytd-card ytd-expense">
+          <div class="ytd-icon">🧾</div>
+          <div class="ytd-info">
+            <div class="ytd-label">${t('ytdExp')}</div>
+            <div class="ytd-value">${(ytd.totalExpenses + ytd.totalLiftExpenses).toLocaleString()} ج</div>
+            <div class="ytd-sub">${t('kpiSubMaint')}: ${ytd.totalExpenses.toLocaleString()} ${t('egp')} &nbsp;|&nbsp; ${t('kpiSubLift')}: ${ytd.totalLiftExpenses.toLocaleString()} ${t('egp')}</div>
+          </div>
+        </div>
+        <div class="ytd-card ytd-balance">
+          <div class="ytd-icon">🏦</div>
+          <div class="ytd-info">
+            <div class="ytd-label">${t('ytdBal')}</div>
+            <div class="ytd-value">${(ytd.balance + ytd.liftBalance).toLocaleString()} ج</div>
+            <div class="ytd-sub">${t('kpiSubMaint')}: ${ytd.balance.toLocaleString()} ${t('egp')} &nbsp;|&nbsp; ${t('kpiSubLift')}: ${ytd.liftBalance.toLocaleString()} ${t('egp')}</div>
+          </div>
+        </div>
+        <div class="ytd-card ytd-net">
+          <div class="ytd-icon">📈</div>
+          <div class="ytd-info">
+            <div class="ytd-label">${t('ytdNet')}</div>
+            <div class="ytd-value">${((ytd.totalIncome + ytd.totalLiftIncome) - (ytd.totalExpenses + ytd.totalLiftExpenses)).toLocaleString()} ج</div>
+            <div class="ytd-sub">${lang === 'en' ? 'Since start of 2026' : 'منذ بداية العام 2026'}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monthly Ledger Statement -->
+    <div class="ledger-wrap">
+      <!-- Maintenance Account -->
+      <div class="ledger-card">
+        <div class="ledger-header">
+          <span class="ledger-icon">🔧</span>
+          <span>${t('maintAcc')} — ${mLabel(MONTHS[mIdx])}</span>
+        </div>
+        <div class="ledger-row ledger-open">
+          <span class="ledger-label">${t('openBal')}</span>
+          <span class="ledger-amount neutral">${(fin.prevBalance||0).toLocaleString()} ${t('egp')}</span>
+        </div>
+        <div class="ledger-row ledger-income">
+          <span class="ledger-label">${t('income')}</span>
+          <span class="ledger-amount green">+ ${totalIncome.toLocaleString()} ${t('egp')}</span>
+        </div>
+        <div class="ledger-row" style="background:${extraCurrent>0?'#f0fdf4':'#fafafa'};border-right:3px solid ${extraCurrent>0?'#16a34a':'#e2e8f0'}">
+          <span class="ledger-label" style="color:${extraCurrent>0?'#15803d':'#94a3b8'};font-weight:${extraCurrent>0?'700':'400'}">+ ${lang==='en'?'Current Month Payments':'دفعات الشهر الجاري'}</span>
+          <span class="ledger-amount" style="color:${extraCurrent>0?'#16a34a':'#94a3b8'};font-weight:${extraCurrent>0?'800':'400'}">${extraCurrent>0?'+ '+extraCurrent.toLocaleString()+' '+t('egp'):'0 '+t('egp')}</span>
+        </div>
+        <div class="ledger-row" style="background:${extraPrevious>0?'#fef3c7':'#fafafa'};border-right:3px solid ${extraPrevious>0?'#d97706':'#e2e8f0'}">
+          <span class="ledger-label" style="color:${extraPrevious>0?'#b45309':'#94a3b8'};font-weight:${extraPrevious>0?'700':'400'}">+ ${lang==='en'?'Previous Periods Received':'استلام متأخرات سابقة'}</span>
+          <span class="ledger-amount" style="color:${extraPrevious>0?'#d97706':'#94a3b8'};font-weight:${extraPrevious>0?'800':'400'}">${extraPrevious>0?'+ '+extraPrevious.toLocaleString()+' '+t('egp'):'0 '+t('egp')}</span>
+        </div>
+        <div class="ledger-row ledger-exp">
+          <span class="ledger-label">${t('expenses')}</span>
+          <span class="ledger-amount red">− ${totalExpenses.toLocaleString()} ${t('egp')}</span>
+        </div>
+        <div class="ledger-divider"></div>
+        <div class="ledger-row ledger-close">
+          <span class="ledger-label">${t('closeBal')}</span>
+          <span class="ledger-amount gold">${balance.toLocaleString()} ${t('egp')}</span>
+        </div>
+        ${mIdx < 11 ? `<div class="ledger-carry">← ${t('carriedTo')} ${mLabel(MONTHS[mIdx+1])}</div>` : ''}
+      </div>
+
+      <!-- Elevator Account — pure formula, no admin extras -->
+      <div class="ledger-card">
+        <div class="ledger-header">
+          <span class="ledger-icon">🛗</span>
+          <span>${t('liftAcc')} — ${mLabel(MONTHS[mIdx])}</span>
+        </div>
+        <div class="ledger-row ledger-open">
+          <span class="ledger-label">${t('openBal')}</span>
+          <span class="ledger-amount neutral">${(fin.prevLift||0).toLocaleString()} ${t('egp')}</span>
+        </div>
+        <div class="ledger-row ledger-income">
+          <span class="ledger-label">${t('income')}</span>
+          <span class="ledger-amount green">+ ${(fin.liftIncome||0).toLocaleString()} ${t('egp')}</span>
+        </div>
+        <div class="ledger-row ledger-exp">
+          <span class="ledger-label">${t('expenses')}</span>
+          <span class="ledger-amount red">− ${Math.abs(fin.liftExpenses||0).toLocaleString()} ${t('egp')}</span>
+        </div>
+        <div class="ledger-divider"></div>
+        <div class="ledger-row ledger-close">
+          <span class="ledger-label">${t('closeBal')}</span>
+          <span class="ledger-amount gold">${liftBalance.toLocaleString()} ${t('egp')}</span>
+        </div>
+        ${mIdx < 11 ? `<div class="ledger-carry">← ${t('carriedTo')} ${mLabel(MONTHS[mIdx+1])}</div>` : ''}
+      </div>
+
+      <!-- Combined Total -->
+      <div class="ledger-card ledger-combined">
+        <div class="ledger-header">
+          <span class="ledger-icon">📊</span>
+          <span>${t('combined')} — ${mLabel(MONTHS[mIdx])}</span>
+        </div>
+        <div class="ledger-row ledger-open">
+          <span class="ledger-label">${t('openBal')}</span>
+          <span class="ledger-amount neutral">${((fin.prevBalance||0)+(fin.prevLift||0)).toLocaleString()} ${t('egp')}</span>
+        </div>
+        <div class="ledger-row ledger-income">
+          <span class="ledger-label">${t('income')}</span>
+          <span class="ledger-amount green">+ ${(totalIncome + (fin.liftIncome||0)).toLocaleString()} ${t('egp')}</span>
+        </div>
+        <div class="ledger-row" style="background:${extraCurrent>0?'#f0fdf4':'#fafafa'};border-right:3px solid ${extraCurrent>0?'#16a34a':'#e2e8f0'}">
+          <span class="ledger-label" style="color:${extraCurrent>0?'#15803d':'#94a3b8'};font-weight:${extraCurrent>0?'700':'400'}">+ ${lang==='en'?'Current Month Payments':'دفعات الشهر الجاري'}</span>
+          <span class="ledger-amount" style="color:${extraCurrent>0?'#16a34a':'#94a3b8'};font-weight:${extraCurrent>0?'800':'400'}">${extraCurrent>0?'+ '+extraCurrent.toLocaleString()+' '+t('egp'):'0 '+t('egp')}</span>
+        </div>
+        <div class="ledger-row" style="background:${extraPrevious>0?'#fef3c7':'#fafafa'};border-right:3px solid ${extraPrevious>0?'#d97706':'#e2e8f0'}">
+          <span class="ledger-label" style="color:${extraPrevious>0?'#b45309':'#94a3b8'};font-weight:${extraPrevious>0?'700':'400'}">+ ${lang==='en'?'Previous Periods Received':'استلام متأخرات سابقة'}</span>
+          <span class="ledger-amount" style="color:${extraPrevious>0?'#d97706':'#94a3b8'};font-weight:${extraPrevious>0?'800':'400'}">${extraPrevious>0?'+ '+extraPrevious.toLocaleString()+' '+t('egp'):'0 '+t('egp')}</span>
+        </div>
+        <div class="ledger-row ledger-exp">
+          <span class="ledger-label">${t('expenses')}</span>
+          <span class="ledger-amount red">− ${(totalExpenses+Math.abs(fin.liftExpenses||0)).toLocaleString()} ${t('egp')}</span>
+        </div>
+        <div class="ledger-divider"></div>
+        <div class="ledger-row ledger-close">
+          <span class="ledger-label">${t('closeBal')}</span>
+          <span class="ledger-amount gold ledger-total-val">${(balance+liftBalance).toLocaleString()} ${t('egp')}</span>
+        </div>
+        ${mIdx < 11 ? `<div class="ledger-carry">← ${t('carriedTo')} ${mLabel(MONTHS[mIdx+1])}</div>` : ''}
+      </div>
+    </div>
+
+    <!-- Tenant Table -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="icon">🏠</span> ${t('tenantsTitle')} — ${mLabel(MONTHS[mIdx])}</div>
+        <div class="filter-bar">
+          <button class="filter-btn ${filter==='all'?'active':''}" onclick="setFilter('all')">${t('filterAll')} (${TENANTS.length})</button>
+          <button class="filter-btn ${filter==='paid'?'active':''}" onclick="setFilter('paid')">${t('filterPaid')} (${totalPaid})</button>
+          <button class="filter-btn ${filter==='due'?'active':''}" onclick="setFilter('due')">${t('filterDue')} (${totalNotPaid})</button>
+          <button class="filter-btn ${filter==='overdue'?'active':''}" onclick="setFilter('overdue')">${t('filterOverdue')}</button>
+          ${isAdmin ? '<button class=\'save-btn\' onclick=\'saveAll()\'>💾 ' + t('save') + '</button> <button class=\'btn-add-exp\' onclick=\'openAddExpense()\'>➕ ' + t('addExpense') + '</button>' : ''}
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="tenant-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>${t('colName')}</th>
+              <th>${t('colApt')}</th>
+              <th>${t('colType')}</th>
+              <th>${t('colFee')}</th>
+              <th>${t('colBal')}</th>
+              <th>${t('colStatus')}</th>
+              <th>${t('colStmt')}</th>
+              ${isAdmin ? '<th>' + t('colMaint') + '</th><th>' + t('colLift') + '</th><th>' + t('colPaid') + '</th>' : ''}
+            </tr>
+          </thead>
+          <tbody>
+            ${filtered.map(tenant => renderTenantRow(tenant, mKey, mIdx)).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Expenses Card — always shown in admin mode, conditionally for tenants -->
+    ${(expList.length > 0 || isAdmin) ? `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><span class="icon">📋</span> ${t('expensesTitle')} — ${mLabel(MONTHS[mIdx])}</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          ${expList.length > 0 ? `<span style="font-weight:700;color:#dc2626">${totalExpItems.toLocaleString()} ${t('egp')}</span>` : ''}
+          ${isAdmin && expList.length > 0 ? `<button onclick="clearAllExpenses('${mKey}')" style="background:#dc2626;color:white;border:none;padding:5px 12px;border-radius:7px;font-family:Cairo,sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer">🗑 ${lang==='en'?'Clear All':'مسح الكل'}</button>` : ''}
+        </div>
+      </div>
+      ${expList.length > 0 ? `
+      <div class="expenses-list">
+        ${expList.map(e => '<div class="expense-item">'
+          + '<span class="expense-name">' + e.name + '</span>'
+          + '<div style="display:flex;gap:8px;align-items:center">'
+          + (e.doc ? '<span class="expense-doc">' + e.doc + '</span>' : '')
+          + '<span class="expense-amount">' + Math.abs(e.amount).toLocaleString() + ' ' + t('egp') + '</span>'
+          + (isAdmin ? '<button class="btn-del-exp" onclick="deleteExpenseItem(\'' + mKey + '\',' + (e.isCustom ? e.id : '"hc_'+e.name.replace(/"/g,'')+'"') + ',' + (!e.isCustom) + ')" title="' + t('deleteExp') + '">🗑</button>' : '')
+          + (isAdmin ? '<button class="btn-del-exp" style="color:#2563a8" onclick="editExpenseItem(\'' + mKey + '\',\'' + e.name.replace(/'/g,'\\\\'+'\'') + '\',' + Math.abs(e.amount) + ',\'' + (e.doc||'') + '\',' + (e.isCustom?e.id:'"hc_'+e.name.replace(/['"]/g,'')+'"') + ',' + (!e.isCustom) + ')" title="${lang===\'en\'?\'Edit\':\'تعديل\'}">✏️</button>' : '')
+          + '</div></div>'
+        ).join('')}
+      </div>` : `<div style="padding:16px;color:#94a3b8;font-size:0.88rem;text-align:center">${lang==='en'?'No expenses recorded yet':'لا توجد مصروفات مسجّلة بعد'}</div>`}
+    </div>` : ''}
+
+    <!-- Edit Expense Modal -->
+    <div id="editExpModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1100;align-items:center;justify-content:center">
+      <div style="background:white;border-radius:16px;padding:28px;width:90%;max-width:420px;box-shadow:0 8px 40px rgba(0,0,0,0.2)">
+        <h3 style="font-family:Cairo,sans-serif;font-size:1.1rem;font-weight:800;color:#1a3a5c;margin-bottom:16px">✏️ ${lang==='en'?'Edit Expense':'تعديل المصروف'}</h3>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <input id="editExpName" type="text" placeholder="${lang==='en'?'Name':'الاسم'}" style="padding:10px 14px;border:2px solid #e2e8f0;border-radius:9px;font-family:Cairo,sans-serif;font-size:0.95rem;direction:rtl;outline:none">
+          <input id="editExpAmount" type="number" placeholder="${lang==='en'?'Amount':'المبلغ'}" min="0" style="padding:10px 14px;border:2px solid #e2e8f0;border-radius:9px;font-family:Cairo,sans-serif;font-size:0.95rem;direction:ltr;text-align:center;outline:none">
+          <input id="editExpDoc" type="text" placeholder="${lang==='en'?'Document (optional)':'المستند (اختياري)'}" style="padding:10px 14px;border:2px solid #e2e8f0;border-radius:9px;font-family:Cairo,sans-serif;font-size:0.95rem;direction:rtl;outline:none">
+        </div>
+        <input type="hidden" id="editExpKey">
+        <input type="hidden" id="editExpId">
+        <input type="hidden" id="editExpIsHardcoded">
+        <div style="display:flex;gap:8px;margin-top:16px">
+          <button onclick="saveEditedExpense()" style="flex:1;background:#1a3a5c;color:white;border:none;padding:11px;border-radius:9px;font-family:Cairo,sans-serif;font-weight:800;cursor:pointer">✓ ${lang==='en'?'Save':'حفظ'}</button>
+          <button onclick="document.getElementById('editExpModal').style.display='none'" style="padding:11px 18px;background:#f1f5f9;border:none;border-radius:9px;font-family:Cairo,sans-serif;font-weight:700;cursor:pointer">${lang==='en'?'Cancel':'إلغاء'}</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tenant Statement Modal -->
+    <div class="stmt-overlay" id="stmtOverlay" onclick="closeStatement(event)">
+      <div class="stmt-modal" id="stmtModal"></div>
+    </div>
+  `;
+}
+
+function renderTenantRow(tenant, mKey, mIdx) {
+  const fee = getMonthlyFee(t);
+  const pay = getMonthPayment(mKey, tenant.id);
+  const cumDue = getCumulativeDue(tenant.id, mIdx);
+  const paidThisMonth = didPayThisMonth(tenant.id, mIdx);
+
+  // Row highlight: green if paid this month, red if has overdue balance
+  let rowClass = '';
+  if (paidThisMonth) rowClass = 'paid-row';
+  else if (cumDue < 0) rowClass = 'overdue-row';
+
+  // Payment status badge (this month)
+  let payStatusHtml;
+  if (paidThisMonth) {
+    payStatusHtml = ('<span class="status-badge status-paid">' + t('paidBadge') + '</span>');
+  } else if (cumDue < 0) {
+    payStatusHtml = ('<span class="status-badge status-overdue">' + t('overdueBadge') + '</span>');
+  } else {
+    payStatusHtml = ('<span class="status-badge status-due">' + t('dueBadge') + '</span>');
+  }
+
+  // Apartment type badge — replaces the old مستحق (Fix: show occupancy + lift)
+  let aptTypeParts = [];
+  if (tenant.occupied) {
+    aptTypeParts.push('<span class="apt-type-badge occ">' + t('occupied') + '</span>');
+  } else {
+    aptTypeParts.push('<span class="apt-type-badge empty-apt">' + t('vacant') + '</span>');
+  }
+  if (tenant.usesLift) {
+    aptTypeParts.push('<span class="apt-type-badge lift">' + t('withLift') + '</span>');
+  } else {
+    aptTypeParts.push('<span class="apt-type-badge no-lift">' + t('noLift') + '</span>');
+  }
+  const aptTypeHtml = aptTypeParts.join('');
+
+  const dueDisplay = cumDue === 0
+    ? '<span class="amount-due zero">' + t('paidFull') + '</span>'
+    : cumDue > 0
+      ? `<span class="amount-due positive">+ ${cumDue.toLocaleString()} ج</span>`
+      : `<span class="amount-due negative">${Math.abs(cumDue).toLocaleString()} ج</span>`;
+
+  const adminCols = isAdmin ? `
+    <td>
+      <input type="number" class="amount-input" 
+        id="maint_${tenant.id}" 
+        value="${pay.maint || fee.maint}"
+        ${pay.paid ? 'disabled' : ''}
+        min="0" max="9999" step="50"
+        oninput="updatePayment('${mKey}',${tenant.id},'maint',this.value)">
+    </td>
+    <td>
+      ${fee.lift > 0 ? `
+        <input type="number" class="amount-input" 
+          id="lift_${tenant.id}" 
+          value="${pay.lift || fee.lift}"
+          ${pay.paid ? 'disabled' : ''}
+          min="0" max="999" step="50"
+          oninput="updatePayment('${mKey}',${tenant.id},'lift',this.value)">
+      ` : '<span style="color:#94a3b8">—</span>'}
+    </td>
+    <td>
+      <div class="pay-toggle">
+        <input type="checkbox" class="pay-checkbox"
+          id="paid_${tenant.id}"
+          ${pay.paid ? 'checked' : ''}
+          onchange="togglePaid('${mKey}',${tenant.id},this.checked)">
+      </div>
+    </td>
+  ` : '';
+
+  return `<tr class="${rowClass}">
+    <td style="color:#94a3b8;font-size:0.8rem">${tenant.id}</td>
+    <td class="tenant-name">${tenant.name}</td>
+    <td><span class="apt-badge">${tenant.apt}</span></td>
+    <td><div style="display:flex;flex-direction:column;gap:4px;align-items:center">${aptTypeHtml}</div></td>
+    <td>
+      <div style="font-weight:700">${fee.total} ج</div>
+      <div style="font-size:0.75rem;color:#94a3b8">${fee.maint}${fee.lift > 0 ? ' + ' + fee.lift + ' ' + t('kpiSubLift') : ''}</div>
+    </td>
+    <td>${dueDisplay}</td>
+    <td>${payStatusHtml}</td>
+    <td>
+      <button class="stmt-btn" onclick="showStatement(${tenant.id}, ${mIdx})">${t('stmtBtn')}</button>
+    </td>
+    ${adminCols}
+  </tr>`;
+}
+
+function renderAnnualDashboard() {
+  const ytd = getYTDStats(11); // full year
+  const adminExtra = 0; // annual uses getYTDStats which already handles month-scoped extras
+  const startBal  = ytd.startMaint;
+  const startLift = ytd.startLift;
+
+  // All expenses ranked
+  const allExp = [];
+  MONTHS.forEach(m => {
+    (getMonthExpenses(m.key) || []).forEach(e => {
+      if (e.amount < 0) {
+        const found = allExp.find(x => x.name === e.name);
+        if (found) found.total += Math.abs(e.amount);
+        else allExp.push({ name: e.name, total: Math.abs(e.amount) });
+      }
+    });
+  });
+  allExp.sort((a, b) => b.total - a.total);
+  const topExp = allExp.slice(0, 8);
+  const maxExp = topExp[0]?.total || 1;
+
+  // Monthly income/expense series for bar charts
+  const incSeries = MONTHS.map(m => { const f = FINANCIALS[m.key]||{}; return (f.income||0)+(f.liftIncome||0); });
+  const expSeries = MONTHS.map(m => { const f = FINANCIALS[m.key]||{}; return Math.abs(f.expenses||0)+Math.abs(f.liftExpenses||0); });
+  const maxBoth = Math.max(...incSeries, ...expSeries, 1);
+
+  const barChart = (series, color) => {
+    const W=560, H=110, pad=28, bw=Math.floor((W-pad*2)/12)-3;
+    return '<svg viewBox="0 0 ' + W + ' ' + (H+18) + '" style="width:100%;height:auto">'
+      + series.map((v, i) => {
+        const x = pad + i*((W-pad*2)/12) + 1;
+        const bh = v > 0 ? Math.round((v/maxBoth)*(H-16)) : 2;
+        const y = H - bh;
+        return '<rect x="' + x + '" y="' + y + '" width="' + bw + '" height="' + bh + '" rx="3" fill="' + color + '"/>'
+          + '<text x="' + (x+bw/2) + '" y="' + (H+13) + '" text-anchor="middle" font-size="9" fill="#94a3b8" font-family="Cairo">' + mLabel(MONTHS[i]).substring(0,3) + '</text>'
+          + (v > 0 ? '<text x="' + (x+bw/2) + '" y="' + (y-3) + '" text-anchor="middle" font-size="8" fill="#64748b" font-family="Cairo">' + (v/1000).toFixed(0) + 'k</text>' : '');
+      }).join('') + '</svg>';
+  };
+
+  // Tenant performance
+  const tenantPerf = TENANTS.map(tp => {
+    const fee = getMonthlyFee(tp);
+    let totalPaid = 0, totalExp = 0;
+    MONTHS.forEach((m, i) => {
+      totalExp += fee.total;
+      totalPaid += (MONTHLY_PAID_AMOUNT[tp.id]||[])[i] || 0;
+    });
+    // extraPayments is month-keyed (building level), not per-tenant; skip here
+    const pct = totalExp > 0 ? Math.round(totalPaid / totalExp * 100) : 0;
+    return { ...tp, fee, totalPaid, totalExpected: totalExp, pct };
+  }).sort((a, b) => a.pct - b.pct);
+
+  const overdueHtml = tenantPerf.filter(tp => tp.pct < 100).map(tp => {
+    const gap = tp.totalExpected - tp.totalPaid;
+    return '<div class="perf-row">'
+      + '<div class="perf-name">' + tp.name + ' <span class="apt-badge" style="font-size:0.7rem">' + tp.apt + '</span></div>'
+      + '<div class="perf-bar-wrap"><div class="perf-bar" style="width:' + tp.pct + '%;background:' + (tp.pct<50?'#ef4444':tp.pct<80?'#f59e0b':'#22c55e') + '"></div></div>'
+      + '<div class="perf-pct" style="color:' + (tp.pct<50?'#ef4444':tp.pct<80?'#d97706':'#16a34a') + '">' + tp.pct + '%</div>'
+      + '<div class="perf-gap" style="color:#dc2626;font-size:0.8rem;font-weight:700">' + (gap>0?gap.toLocaleString()+' '+t('egp'):'') + '</div>'
+      + '</div>';
+  }).join('') || '<div style="padding:16px;color:#16a34a;font-weight:700;text-align:center">&#10003; ' + t('noCompliantYet') + '</div>';
+
+  const fullyPaidCount = tenantPerf.filter(tp => tp.pct >= 100).length;
+  const fullyPaidBanner = fullyPaidCount > 0
+    ? '<div style="margin-top:12px;padding:10px 14px;background:#f0fdf4;border-radius:10px;font-size:0.85rem;color:#16a34a;font-weight:700">&#10003; ' + fullyPaidCount + ' ' + t('allCompliant') + '</div>'
+    : '';
+
+  const topExpHtml = topExp.map(e => {
+    const pct = Math.round(e.total/(ytd.totalExpenses+ytd.totalLiftExpenses||1)*100);
+    const w   = Math.round(e.total/maxExp*100);
+    return '<div class="exp-rank-row">'
+      + '<div class="exp-rank-name">' + e.name + '</div>'
+      + '<div class="exp-rank-bar-wrap"><div class="exp-rank-bar" style="width:' + w + '%"></div></div>'
+      + '<div class="exp-rank-nums"><span class="exp-rank-amt">' + e.total.toLocaleString() + ' ' + t('egp') + '</span><span class="exp-rank-pct">' + pct + '%</span></div>'
+      + '</div>';
+  }).join('');
+
+  const monthlyRows = MONTHS.map((m, i) => {
+    const f      = FINANCIALS[m.key]||{};
+    const open   = (f.prevBalance||0)+(f.prevLift||0);
+    const inc    = (f.income||0)+(f.liftIncome||0);
+    const exp    = Math.abs(f.expenses||0)+Math.abs(f.liftExpenses||0);
+    const ep     = extraPayments[m.key] || {};
+    const arr    = typeof ep === 'object' ? ((ep.current||0)+(ep.previous||0)) : (ep||0);
+    const cls    = open + inc + arr - exp;
+    const hasData = inc > 0 || exp > 0 || arr > 0;
+    const incDisplay = (inc+arr) > 0 ? '+' + (inc+arr).toLocaleString() + (arr>0?' *':'') : '—';
+    return '<tr style="' + (!hasData?'opacity:0.45':'') + '">'
+      + '<td style="font-weight:700">' + mLabel(m) + '</td>'
+      + '<td style="color:#2563a8;font-weight:600">' + open.toLocaleString() + '</td>'
+      + '<td style="color:#16a34a;font-weight:600">' + incDisplay + '</td>'
+      + '<td style="color:#dc2626;font-weight:600">' + (exp>0?'-'+exp.toLocaleString():'—') + '</td>'
+      + '<td style="color:#b45309;font-weight:800">' + cls.toLocaleString() + '</td>'
+      + '</tr>';
+  }).join('')
+  + (Object.values(extraPayments).some(ep => ep) ? '<tr><td colspan="5" style="font-size:0.75rem;color:#64748b;padding:6px 16px">* ' + (lang==='en'?'Includes additional payments recorded':'يشمل دفعات إضافية مسجّلة') + '</td></tr>' : '');
+
+  const totalCombined = ytd.balance + ytd.liftBalance;
+
+  document.getElementById('mainContent').innerHTML = `
+    <div class="annual-hero">
+      <div>
+        <div style="font-size:0.85rem;opacity:0.7;font-weight:600;letter-spacing:1px">${t('annualExecutive')}</div>
+        <h2 style="font-size:1.8rem;font-weight:900;margin-top:4px">${t('annualHeroTitle')}</h2>
+        <p style="opacity:0.65;font-size:0.88rem;margin-top:4px">${t('annualHeroSub')}</p>
+      </div>
+      <div style="font-size:3rem;opacity:0.3">📊</div>
+    </div>
+    <div class="annual-kpi-grid">
+      <div class="kpi-card kpi-blue"><div class="kpi-icon">🏦</div><div class="kpi-body">
+        <div class="kpi-label">${t('kpiStartBal')}</div>
+        <div class="kpi-value">${(startBal+startLift).toLocaleString()}</div>
+        <div class="kpi-sub">${t('kpiSubMaint')}: ${startBal.toLocaleString()} · ${t('kpiSubLift')}: ${startLift.toLocaleString()}</div>
+      </div></div>
+      <div class="kpi-card kpi-green"><div class="kpi-icon">💰</div><div class="kpi-body">
+        <div class="kpi-label">${t('kpiRevenue')}</div>
+        <div class="kpi-value">${(ytd.totalIncome+ytd.totalLiftIncome).toLocaleString()}</div>
+        <div class="kpi-sub">${t('kpiSubMaint')}: ${ytd.totalIncome.toLocaleString()} · ${t('kpiSubLift')}: ${ytd.totalLiftIncome.toLocaleString()}</div>
+      </div></div>
+      <div class="kpi-card kpi-red"><div class="kpi-icon">🧾</div><div class="kpi-body">
+        <div class="kpi-label">${t('kpiExpenses')}</div>
+        <div class="kpi-value">${(ytd.totalExpenses+ytd.totalLiftExpenses).toLocaleString()}</div>
+        <div class="kpi-sub">${t('kpiSubMaint')}: ${ytd.totalExpenses.toLocaleString()} · ${t('kpiSubLift')}: ${ytd.totalLiftExpenses.toLocaleString()}</div>
+      </div></div>
+      <div class="kpi-card kpi-gold"><div class="kpi-icon">✅</div><div class="kpi-body">
+        <div class="kpi-label">${t('kpiSurplus')}</div>
+        <div class="kpi-value">${((ytd.totalIncome+ytd.totalLiftIncome)-(ytd.totalExpenses+ytd.totalLiftExpenses)).toLocaleString()}</div>
+        <div class="kpi-sub">${t('kpiSubDuring')}</div>
+      </div></div>
+      <div class="kpi-card kpi-teal"><div class="kpi-icon">🏛️</div><div class="kpi-body">
+        <div class="kpi-label">${t('kpiEndBal')}</div>
+        <div class="kpi-value">${totalCombined.toLocaleString()}</div>
+        <div class="kpi-sub">${t('kpiSubMaint')}: ${ytd.balance.toLocaleString()} · ${t('kpiSubLift')}: ${ytd.liftBalance.toLocaleString()}</div>
+      </div></div>
+      <div class="kpi-card kpi-purple"><div class="kpi-icon">👥</div><div class="kpi-body">
+        <div class="kpi-label">${t('kpiUnits')}</div>
+        <div class="kpi-value">${TENANTS.filter(x=>x.occupied).length} / ${TENANTS.filter(x=>!x.occupied).length}</div>
+        <div class="kpi-sub">${t('liftSubscribers')}: ${TENANTS.filter(x=>x.usesLift).length}</div>
+      </div></div>
+    </div>
+    <div class="annual-charts-grid">
+      <div class="card"><div class="card-header"><div class="card-title"><span class="icon">📈</span> ${t('monthlyIncome')}</div></div>
+        <div style="padding:16px 20px 8px">${barChart(incSeries,'#22c55e')}</div></div>
+      <div class="card"><div class="card-header"><div class="card-title"><span class="icon">📉</span> ${t('monthlyExpenses')}</div></div>
+        <div style="padding:16px 20px 8px">${barChart(expSeries,'#ef4444')}</div></div>
+    </div>
+    <div class="annual-bottom-grid">
+      <div class="card"><div class="card-header">
+        <div class="card-title"><span class="icon">🔝</span> ${t('topExpenses')}</div>
+        <div style="font-weight:700;color:#dc2626">${(ytd.totalExpenses+ytd.totalLiftExpenses).toLocaleString()} ${t('egp')}</div>
+      </div><div style="padding:8px 0">${topExpHtml}</div></div>
+      <div class="card"><div class="card-header"><div class="card-title"><span class="icon">📋</span> ${t('monthlyLedger')}</div></div>
+        <div style="overflow-x:auto"><table class="tenant-table" style="font-size:0.82rem"><thead><tr>
+          <th>${t('stmtMonth')}</th><th>${t('openingBalCol')}</th><th>${t('incomeCol')}</th><th>${t('expensesCol')}</th><th>${t('closingBalCol')}</th>
+        </tr></thead><tbody>${monthlyRows}
+          <tr style="background:#1a3a5c;color:white;font-weight:800">
+            <td>${t('totalRow')}</td><td>—</td>
+            <td style="color:#86efac">+${(ytd.totalIncome+ytd.totalLiftIncome).toLocaleString()}</td>
+            <td style="color:#fca5a5">-${(ytd.totalExpenses+ytd.totalLiftExpenses).toLocaleString()}</td>
+            <td style="color:#fde68a">${totalCombined.toLocaleString()}</td>
+          </tr>
+        </tbody></table></div>
+      </div>
+    </div>
+    <div class="card"><div class="card-header">
+      <div class="card-title"><span class="icon">🏠</span> ${t('collectionPerf')}</div>
+      <div style="font-size:0.82rem;color:#64748b">${t('leastCompliant')}</div>
+    </div>
+    <div style="padding:12px 20px">${overdueHtml}${fullyPaidBanner}</div></div>
+  `;
+}
+
+function renderAll() {
+  renderMonthNav();
+  if (currentMonth === 12) {
+    renderAnnualDashboard();
+  } else {
+    renderMain();
+  }
+}
+
+// ============================================================
+//  ADMIN ACTIONS
+// ============================================================
+function handleAdminClick() {
+  if (isAdmin) {
+    // Logout
+    isAdmin = false;
+    document.getElementById('adminBadge').classList.remove('active');
+    document.getElementById('adminBtn').textContent = '🔑 دخول الإدارة';
+    showToast('تم تسجيل الخروج', 'success');
+    renderAll();
+  } else {
+    document.getElementById('adminModal').classList.add('active');
+    document.getElementById('pwdInput').value = '';
+    document.getElementById('pwdInput').classList.remove('error');
+    document.getElementById('pwdError').classList.remove('active');
+    setTimeout(() => document.getElementById('pwdInput').focus(), 100);
+  }
+}
+
+function checkPassword() {
+  const val = document.getElementById('pwdInput').value;
+  if (val === ADMIN_PASSWORD) {
+    isAdmin = true;
+    closeModal();
+    document.getElementById('adminBadge').classList.add('active');
+    document.getElementById('adminBtn').textContent = '🔓 خروج الإدارة';
+    showToast('تم دخول وضع الإدارة ✓', 'success');
+    renderAll();
+  } else {
+    document.getElementById('pwdInput').classList.add('error');
+    document.getElementById('pwdError').classList.add('active');
+    document.getElementById('pwdInput').value = '';
+    document.getElementById('pwdInput').focus();
+  }
+}
+
+function closeModal() {
+  document.getElementById('adminModal').classList.remove('active');
+}
+
+function setFilter(f) {
+  filter = f;
+  renderAll();
+}
+
+function updatePayment(mKey, tenantId, field, value) {
+  if (!payments[mKey]) payments[mKey] = {};
+  if (!payments[mKey][tenantId]) payments[mKey][tenantId] = { maint: 0, lift: 0, paid: false };
+  payments[mKey][tenantId][field] = parseFloat(value) || 0;
+}
+
+function togglePaid(mKey, tenantId, checked) {
+  if (!payments[mKey]) payments[mKey] = {};
+  if (!payments[mKey][tenantId]) {
+    const tenant = TENANTS.find(x => x.id === tenantId);
+    const fee = getMonthlyFee(tenant);
+    payments[mKey][tenantId] = { maint: fee.maint, lift: fee.lift, paid: false };
+  }
+  payments[mKey][tenantId].paid = checked;
+
+  // Read current input values
+  const maintEl = document.getElementById(`maint_${tenantId}`);
+  const liftEl = document.getElementById(`lift_${tenantId}`);
+  if (maintEl) payments[mKey][tenantId].maint = parseFloat(maintEl.value) || 0;
+  if (liftEl) payments[mKey][tenantId].lift = parseFloat(liftEl.value) || 0;
+
+  saveState(payments);
+  const tenant = TENANTS.find(x => x.id === tenantId);
+  showToast(checked ? '✓ تم تسجيل دفع ' + TENANTS.find(x=>x.id===tenantId).name : 'تم إلغاء دفع ' + TENANTS.find(x=>x.id===tenantId).name, checked ? 'success' : '');
+  renderAll();
+}
+
+function saveAll() {
+  saveState(payments);
+  showToast('✓ تم حفظ جميع التغييرات', 'success');
+}
+
+// ============================================================
+//  TENANT STATEMENT
+// ============================================================
+
+function showStatement(tenantId, upToMonthIdx) {
+  _stmtTenantId     = tenantId;
+  _stmtUpToMonthIdx = upToMonthIdx;
+  _stmtTicks        = {};   // reset ticks for new tenant
+  _drawStatement();
+}
+var _stmtTenantId = null, _stmtUpToMonthIdx = 0;
+
+// Tracks which rows are ticked by admin in the open statement
+var _stmtTicks = {};   // { 'prev': bool, 0: bool, 1: bool, ... }
+
+function _stmtTick(key) {
+  // key arrives as string from data-key; convert numeric strings to numbers
+  var k = (key !== 'prev' && !isNaN(key)) ? parseInt(key) : key;
+  _stmtTicks[k] = !_stmtTicks[k];
+  _drawStatement();
+}
+
+function _drawStatement() {
+  var tenantId     = _stmtTenantId;
+  var upToMonthIdx = _stmtUpToMonthIdx;
+  var tenant   = TENANTS.find(function(x){ return x.id === tenantId; });
+  var fee      = getMonthlyFee(tenant);
+  var totalFee = fee.total;
+  var openingBal = OPENING_BALANCE[tenantId] || 0;
+
+  // ── Build row data ──────────────────────────────────────────────────────────
+  // First pass: compute natural running balance (Excel + admin ticks)
+  var rowData = [];
+  var runBal = openingBal;
+  var totalExp = 0, totalPd = 0;
+
+  MONTHS.slice(0, upToMonthIdx + 1).forEach(function(m, i) {
+    var excelMaint = (MONTHLY_MAINT_PAID[tenantId]||[])[i] || 0;
+    var excelLift  = (MONTHLY_LIFT_PAID[tenantId] ||[])[i] || 0;
+    var ap = payments[m.key] && payments[m.key][tenantId];
+    var paid = ap ? Math.max(excelMaint, ap.maint||0) + Math.max(excelLift, ap.lift||0)
+                  : excelMaint + excelLift;
+    runBal  = runBal - totalFee + paid;
+    totalExp += totalFee;
+    totalPd  += paid;
+    rowData.push({ m: m, i: i, fee: totalFee, paid: paid, bal: runBal,
+                   isPaid: paid >= totalFee, isPartial: paid > 0 && paid < totalFee });
+  });
+
+  // ── Compute ticked amounts ───────────────────────────────────────────────────
+  var tickedCurrent  = 0;
+  var tickedPrevious = 0;
+
+  // Opening balance tick — always "previous years"
+  if (_stmtTicks['prev'] && openingBal < 0) tickedPrevious += Math.abs(openingBal);
+
+  // Monthly row ticks:
+  // - months BEFORE the viewed month (i < upToMonthIdx) = previous months
+  // - the viewed month itself (i === upToMonthIdx) = current month
+  rowData.forEach(function(rd) {
+    if (_stmtTicks[rd.i] && !rd.isPaid) {
+      var owed = rd.fee - rd.paid;
+      if (rd.i < upToMonthIdx) {
+        tickedPrevious += owed;   // past month, unpaid = previous period debt
+      } else {
+        tickedCurrent += owed;    // current month = current period
+      }
+    }
+  });
+
+  // ── Build HTML rows ─────────────────────────────────────────────────────────
+  var rows = '';
+
+  // Opening balance row
+  if (openingBal !== 0) {
+    var isTicked = _stmtTicks['prev'];
+    var obAmt = Math.abs(openingBal);
+    var obColor = openingBal < 0 ? '#dc2626' : '#16a34a';
+    var obDisplay = openingBal < 0
+      ? '(' + obAmt.toLocaleString() + ' ' + t('egp') + ')'
+      : '+' + obAmt.toLocaleString() + ' ' + t('egp');
+    var tickBox = openingBal < 0 && isAdmin
+      ? '<input type="checkbox" data-key="prev" ' + (isTicked?'checked':'') + ' onchange="_stmtTick(this.dataset.key)"'
+        + ' style="width:18px;height:18px;accent-color:#d97706;cursor:pointer;flex-shrink:0">'
+      : '';
+    rows += '<tr style="background:#fffbeb">'
+      + '<td colspan="2" style="font-weight:800;color:#d97706">' + t('prevYearBal') + ' — ' + t('prevYearDesc') + '</td>'
+      + '<td></td>'
+      + '<td><span style="color:' + obColor + ';font-weight:700">' + obDisplay + '</span></td>'
+      + '<td style="text-align:center">' + tickBox + '</td>'
+      + '</tr>';
+  }
+
+  // Monthly rows
+  rowData.forEach(function(rd) {
+    var isTicked = _stmtTicks[rd.i];
+    var tickBox = (!rd.isPaid && isAdmin)
+      ? '<input type="checkbox" data-key="' + rd.i + '" ' + (isTicked?'checked':'') + ' onchange="_stmtTick(this.dataset.key)"'
+        + ' style="width:18px;height:18px;accent-color:#16a34a;cursor:pointer">'
+      : (rd.isPaid ? '<span style="color:#16a34a">&#10003;</span>' : '');
+    var statusCell = rd.isPaid
+      ? '<span style="color:#16a34a;font-weight:700">&#10003; ' + t('stmtPaid2') + '</span>'
+      : rd.isPartial
+        ? '<span style="color:#d97706;font-weight:700">' + t('partial') + '</span>'
+        : '<span style="color:#dc2626;font-size:0.82rem">&#9888; ' + t('notPaid') + '</span>';
+    var balCell = rd.bal === 0
+      ? '<span style="color:#16a34a;font-weight:700">' + t('paidFull2') + '</span>'
+      : rd.bal < 0
+        ? '<span style="color:#dc2626;font-weight:700">(' + Math.abs(rd.bal).toLocaleString() + ' ' + t('egp') + ')</span>'
+        : '<span style="color:#2563a8;font-weight:700">+' + rd.bal.toLocaleString() + ' ' + t('egp') + '</span>';
+    var bg = rd.isPaid ? 'background:#f0fdf4' : rd.bal < 0 ? 'background:#fff5f5' : '';
+    rows += '<tr style="' + bg + '">'
+      + '<td style="font-weight:700">' + mLabel(rd.m) + '</td>'
+      + '<td>' + rd.fee + ' ' + t('egp') + '</td>'
+      + '<td style="font-weight:700;color:' + (rd.paid>0?'#16a34a':'#94a3b8') + '">' + (rd.paid>0?rd.paid.toLocaleString()+' '+t('egp'):'—') + '</td>'
+      + '<td>' + statusCell + '</td>'
+      + '<td style="text-align:center">' + tickBox + '</td>'
+      + '</tr>';
+  });
+
+  // ── Admin panel ─────────────────────────────────────────────────────────────
+  var ep    = extraPayments[MONTHS[upToMonthIdx].key] || {};
+  var epCur = typeof ep==='object' ? (ep.current||0)  : 0;
+  var epPrv = typeof ep==='object' ? (ep.previous||0) : (typeof ep==='number'?ep:0);
+
+  // Pre-fill from ticks if any are selected
+  var prefillCur = tickedCurrent  > 0 ? tickedCurrent  : (epCur || '');
+  var prefillPrv = tickedPrevious > 0 ? tickedPrevious : (epPrv || '');
+
+  var tickHint = (tickedCurrent + tickedPrevious > 0 && isAdmin)
+    ? '<div style="margin-bottom:10px;padding:8px 12px;background:#dbeafe;border-radius:8px;font-size:0.8rem;color:#1e40af;font-weight:700">'
+      + '&#9432; ' + (lang==='en'
+        ? 'Auto-filled from ticks — review and save'
+        : 'تم التعبئة من التحديدات — راجع واضغط حفظ')
+      + '<div style="margin-top:4px;font-weight:600;color:#1e40af">'
+      + (lang==='en'?'Current: ':'جاري: ') + tickedCurrent.toLocaleString() + ' ' + t('egp')
+      + ' &nbsp;|&nbsp; '
+      + (lang==='en'?'Previous: ':'سابق: ') + tickedPrevious.toLocaleString() + ' ' + t('egp')
+      + '</div></div>'
+    : '';
+
+  var adminPanel = isAdmin ? (
+    '<div style="margin:0 20px 16px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:16px 18px">'
+    + '<div style="font-weight:800;color:#1a3a5c;font-size:0.9rem;margin-bottom:10px">&#10133; ' + (lang==='en'?'Record Payments':'تسجيل المدفوعات') + '</div>'
+    + tickHint
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">'
+    + '<div><div style="font-size:0.75rem;font-weight:700;color:#15803d;margin-bottom:4px">&#9654; ' + (lang==='en'?'Current Month':'الشهر الجاري') + '</div>'
+    + '<input type="number" id="extraCurAmt" placeholder="0" min="0" step="100" value="' + prefillCur + '"'
+    + ' style="width:100%;padding:8px 10px;border:2px solid #bbf7d0;border-radius:8px;font-family:Cairo,sans-serif;font-size:0.95rem;direction:ltr;text-align:center;outline:none;background:#f0fdf4"></div>'
+    + '<div><div style="font-size:0.75rem;font-weight:700;color:#d97706;margin-bottom:4px">&#9654; ' + (lang==='en'?'Previous Months/Years':'أشهر / سنوات سابقة') + '</div>'
+    + '<input type="number" id="extraPrvAmt" placeholder="0" min="0" step="100" value="' + prefillPrv + '"'
+    + ' style="width:100%;padding:8px 10px;border:2px solid #fde68a;border-radius:8px;font-family:Cairo,sans-serif;font-size:0.95rem;direction:ltr;text-align:center;outline:none;background:#fffbeb"></div>'
+    + '</div>'
+    + '<div style="display:flex;gap:8px">'
+    + '<button onclick="_applyExtra(' + tenantId + ')" style="flex:1;background:#1a3a5c;color:white;border:none;padding:10px;border-radius:8px;font-family:Cairo,sans-serif;font-weight:800;font-size:0.88rem;cursor:pointer">&#10003; ' + (lang==='en'?'Save':'حفظ') + '</button>'
+    + ((epCur>0||epPrv>0)?'<button onclick="_clearExtra(' + tenantId + ')" style="background:#dc2626;color:white;border:none;padding:10px 14px;border-radius:8px;font-family:Cairo,sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer">&#10005; ' + (lang==='en'?'Clear':'مسح') + '</button>':'')
+    + '</div>'
+    + '<details style="margin-top:10px"><summary style="font-size:0.78rem;color:#94a3b8;cursor:pointer">' + (lang==='en'?'⚙ Fix wrongly ticked month...':'⚙ تصحيح شهر محدد خطأ...') + '</summary>'
+    + '<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;padding:8px;background:#fff5f5;border-radius:8px">'
+    + MONTHS.slice(0, upToMonthIdx+1).map(function(m,i){
+        var hasTick = payments[m.key] && payments[m.key][tenantId] && payments[m.key][tenantId].paid;
+        return hasTick ? '<button onclick="_clearTenantMonth(' + tenantId + ',' + i + ')" style="background:#dc2626;color:white;border:none;padding:5px 10px;border-radius:6px;font-family:Cairo,sans-serif;font-size:0.78rem;cursor:pointer">✕ ' + mLabel(m) + '</button>' : '';
+      }).join('')
+    + '</div></details>'
+    + ((epCur>0||epPrv>0)?'<div style="margin-top:8px;font-size:0.8rem;color:#64748b">&#10003; ' + (lang==='en'?'Saved — Current: ':'محفوظ — جاري: ') + epCur.toLocaleString() + ' · ' + (lang==='en'?'Previous: ':'سابق: ') + epPrv.toLocaleString() + ' ' + t('egp') + '</div>':'')
+    + '</div>'
+  ) : '';
+
+  // ── Final balance ────────────────────────────────────────────────────────────
+  var arrearsIn  = epCur + epPrv;
+  var finalBal   = runBal + arrearsIn;
+  var finalDisplay = finalBal === 0
+    ? '<span class="stmt-total-value green">' + t('paidFull2') + ' &#10003;</span>'
+    : finalBal < 0
+      ? '<span class="stmt-total-value red">(' + Math.abs(finalBal).toLocaleString() + ' ' + t('egp') + ' ' + t('overdueSuffix') + ')</span>'
+      : '<span class="stmt-total-value blue">+' + finalBal.toLocaleString() + ' ' + t('egp') + ' ' + t('creditSuffix') + '</span>';
+
+  var occupancyInfo = tenant.occupied
+    ? (t('occupied') + (tenant.usesLift ? ' · ' + t('liftSubscriber') : ' · ' + t('noLift')))
+    : (t('vacant') + (tenant.usesLift ? ' · ' + t('liftSubscriber') : ''));
+
+  var modal = document.getElementById('stmtModal');
+  if (!modal) return;
+
+  var adminHeader = isAdmin
+    ? '<div style="padding:8px 20px 0;font-size:0.78rem;color:#64748b;font-style:italic">'
+      + (lang==='en'
+        ? '&#9432; Tick unpaid rows to auto-fill payment amounts below'
+        : '&#9432; حدّد الصفوف غير المدفوعة لملء المبالغ تلقائياً أدناه')
+      + '</div>'
+    : '';
+
+  modal.innerHTML =
+    '<div class="stmt-header">'
+    + '<h3>&#128196; ' + t('stmtTitle') + ' — ' + tenant.name + '</h3>'
+    + '<p>' + t('aptFrom') + ' ' + tenant.apt + ' · ' + occupancyInfo + ' · ' + fee.total + ' ' + t('egp') + '/' + (lang==='en'?'mo':'شهر') + ' · ' + t('until') + ' ' + mLabel(MONTHS[upToMonthIdx]) + ' 2026</p>'
+    + '</div>'
+    + '<div class="stmt-totals" style="grid-template-columns:repeat(5,1fr)">'
+    + '<div class="stmt-total-item"><div class="stmt-total-label">' + t('stmtExpected') + '</div><div class="stmt-total-value blue">' + totalExp.toLocaleString() + ' ' + t('egp') + '</div></div>'
+    + '<div class="stmt-total-item"><div class="stmt-total-label">' + t('stmtPaidTotal') + '</div><div class="stmt-total-value green">' + totalPd.toLocaleString() + ' ' + t('egp') + '</div></div>'
+    + '<div class="stmt-total-item"><div class="stmt-total-label">' + (lang==='en'?'+ Current':'+ جاري') + '</div><div class="stmt-total-value ' + (epCur>0?'green':'') + '">' + (epCur>0?epCur.toLocaleString()+' '+t('egp'):t('noPrev')) + '</div></div>'
+    + '<div class="stmt-total-item"><div class="stmt-total-label">' + (lang==='en'?'+ Previous':'+ سابق') + '</div><div class="stmt-total-value ' + (epPrv>0?'blue':'') + '">' + (epPrv>0?epPrv.toLocaleString()+' '+t('egp'):t('noPrev')) + '</div></div>'
+    + '<div class="stmt-total-item"><div class="stmt-total-label">' + t('stmtBalance') + '</div>' + finalDisplay + '</div>'
+    + '</div>'
+    + adminHeader
+    + adminPanel
+    + '<div style="overflow-x:auto"><table class="stmt-table"><thead><tr>'
+    + '<th>' + t('stmtMonth') + '</th><th>' + t('stmtDue') + '</th><th>' + t('stmtPaid') + '</th><th>' + t('stmtStatus') + '</th>'
+    + '<th>' + (isAdmin ? (lang==='en'?'&#9989; Settle':'&#9989; تسوية') : t('stmtStatus')) + '</th>'
+    + '</tr></thead><tbody>' + rows + '</tbody></table></div>'
+    + '<button class="stmt-close-btn" onclick="closeStatement()">' + t('stmtClose') + '</button>';
+
+  document.getElementById('stmtOverlay').classList.add('active');
+}
+
+
+function _clearTenantMonth(tenantId, monthIdx) {
+  var mKey = MONTHS[monthIdx].key;
+  if (payments[mKey] && payments[mKey][tenantId]) {
+    delete payments[mKey][tenantId];
+    saveState(payments);
+    _drawStatement();
+    renderAll();
+    showToast((lang==='en' ? 'Cleared: ' : 'تم مسح: ') + mLabel(MONTHS[monthIdx]), 'success');
+  }
+}
+
+function _applyExtra(tenantId) {
+  var cur = parseFloat(document.getElementById('extraCurAmt').value) || 0;
+  var prv = parseFloat(document.getElementById('extraPrvAmt').value) || 0;
+  var mKey = MONTHS[currentMonth].key;
+  extraPayments[mKey] = { current: cur, previous: prv };
+  saveExtraPayments();
+  updateBalanceChain();
+  _drawStatement();
+  renderAll();
+  showToast(lang==='en' ? '✓ Saved: '+(cur+prv).toLocaleString()+' EGP' : '✓ تم تسجيل: '+(cur+prv).toLocaleString()+' ج', 'success');
+}
+
+function _clearExtra(tenantId) {
+  var mKey = MONTHS[currentMonth].key;
+  delete extraPayments[mKey];
+  saveExtraPayments();
+  updateBalanceChain();
+  _drawStatement();
+  renderAll();
+  showToast(lang==='en' ? 'Payment cleared' : 'تم مسح الدفعة', 'success');
+}
+function closeStatement(e) {
+  if (!e || e.target === document.getElementById('stmtOverlay')) {
+    document.getElementById('stmtOverlay')?.classList.remove('active');
+  }
+}
+
+// Close modal on overlay click
+document.getElementById('adminModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ============================================================
+//  TOAST
+// ============================================================
+let toastTimer;
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type ? ' ' + type : '') + ' show';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.classList.remove('show'); }, 2800);
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+renderAll();
+</script>
+</body>
+</html>
